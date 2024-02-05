@@ -167,32 +167,9 @@ class Open_Maps_Admin
       'open_maps_general_settings' // Page on which to add this section of options
     );
 
-    
 
-    // Latitude
-    $args = array(
-      'type'      => 'input',
-      'subtype'   => 'text',
-      'id'    => 'open_maps_latitude',
-      'name'      => 'open_maps_latitude',
-      'required' => 'true',
-      'get_options_list' => '',
-      'value_type' => 'normal',
-      'wp_data' => 'option'
-    );
-
-    add_settings_field(
-      $args['id'],
-      __('Latitude', 'open-maps'),
-      array($this, 'open_maps_render_settings_field'),
-      'open_maps_general_settings',
-      'open_maps_general_section',
-      $args
-    );
-    $register($args['id']);
 
     // Longitude
-    unset($args);
     $args = array(
       'type'      => 'input',
       'subtype'   => 'text',
@@ -207,6 +184,29 @@ class Open_Maps_Admin
     add_settings_field(
       $args['id'],
       __('Longitude', 'open-maps'),
+      array($this, 'open_maps_render_settings_field'),
+      'open_maps_general_settings',
+      'open_maps_general_section',
+      $args
+    );
+    $register($args['id']);
+
+    // Latitude
+    unset($args);
+    $args = array(
+      'type'      => 'input',
+      'subtype'   => 'text',
+      'id'    => 'open_maps_latitude',
+      'name'      => 'open_maps_latitude',
+      'required' => 'true',
+      'get_options_list' => '',
+      'value_type' => 'normal',
+      'wp_data' => 'option'
+    );
+
+    add_settings_field(
+      $args['id'],
+      __('Latitude', 'open-maps'),
       array($this, 'open_maps_render_settings_field'),
       'open_maps_general_settings',
       'open_maps_general_section',
