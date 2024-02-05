@@ -96,7 +96,7 @@ class Open_Maps_Public
      * class.
      */
 
-    $initial_zoomlevel = get_option('open_maps_initial_zoomlevel', 10);
+    $initial_zoomlevel = get_option('open_maps_initial_zoomlevel', 15);
     $latitude = get_option('open_maps_latitude', 13.41332745563617);
     $longitude = get_option('open_maps_longitude', 52.522098876428394);
 
