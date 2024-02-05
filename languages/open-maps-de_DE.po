@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Open Street Map\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-05 19:54+0000\n"
-"PO-Revision-Date: 2024-02-05 20:08+0000\n"
+"PO-Revision-Date: 2024-02-05 21:13+0000\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch\n"
 "Language: de_DE\n"
@@ -26,7 +26,7 @@ msgstr "Allgemeine Einstellungen"
 
 #: admin/class-open-maps-admin.php:242
 msgid "Geographical coordinates and view settings"
-msgstr "Geografische Korrdinaten und Darstellung"
+msgstr "Geografische Koordinaten und Darstellung"
 
 #. Author URI of the plugin
 msgid "https://www.webpremiere.de"
