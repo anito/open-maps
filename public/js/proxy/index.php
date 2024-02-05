@@ -81,7 +81,8 @@ function get_image($image, $image_file)
 }
 function image_filter($image, $ZCZB6hvU1IaJ = "")
 {
-  return imagefilter($image, IMG_FILTER_GRAYSCALE);
+  // return imagefilter($image, IMG_FILTER_GRAYSCALE);
+  return $image;
 }
 function output_file($image_file)
 {

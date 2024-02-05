@@ -13,12 +13,12 @@
  * @package           Open_Maps
  *
  * @wordpress-plugin
- * Plugin Name:       Open Maps
+ * Plugin Name:       Open Street Maps
  * Plugin URI:        https://www.wplauncher.com
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
- * Version:           1.0.1
+ * Description:       Interaktive Karte als Ersatz für Google Maps
+ * Version:           1.0.2
  * Author:            Axel Nitzschner
- * Author URI:        https://www.wplauncher.com
+ * Author URI:        https://www.webpremiere.de
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       open-maps
@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'OPEN_MAPS_VERSION', '1.0.1' );
+define( 'OPEN_MAPS_VERSION', '1.0.2' );
 
 /**
  * The code that runs during plugin activation.
