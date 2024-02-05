@@ -13,7 +13,7 @@
  * @package           Open_Maps
  *
  * @wordpress-plugin
- * Plugin Name:       Open Street Maps
+ * Plugin Name:       Open Street Map
  * Plugin URI:        https://www.wplauncher.com
  * Description:       Interaktive Karte als Ersatz für Google Maps
  * Version:           1.0.2
