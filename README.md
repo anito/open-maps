@@ -1,6 +1,6 @@
 # Open Maps WordPress Plugin
 
-![Plugin Settings Form](https://blog.wplauncher.com/wp-content/uploads/2020/07/Screen-Shot-2020-07-05-at-2.41.54-PM.png)
+![Plugin Settings Form](./images/hero.jpg)
 
 This is a simple WordPress plugin that creates a settings page. The settings page allows WordPress admin users to add their settings for a plugin. 
 
