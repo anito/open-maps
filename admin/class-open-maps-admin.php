@@ -106,10 +106,10 @@ class Open_Maps_Admin
   public function addPluginAdminMenu()
   {
     //add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position );
-    add_menu_page($this->plugin_name, 'Open Street Maps', 'administrator', $this->plugin_name, array($this, 'displayPluginAdminDashboard'), 'dashicons-location-alt', 26);
+    add_menu_page(__('Open Street Maps', 'open-maps'), __('Open Street Maps', 'open-maps'), 'administrator', $this->plugin_name, array($this, 'displayPluginAdminSettings'), 'dashicons-location-alt', 26);
 
     //add_submenu_page( '$parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function );
-    add_submenu_page($this->plugin_name, 'Open Maps Settings', 'Settings', 'administrator', $this->plugin_name . '-settings', array($this, 'displayPluginAdminSettings'));
+    // add_submenu_page($this->plugin_name, 'Open Maps Settings', __('Settings', 'open-maps'), 'administrator', $this->plugin_name . '-settings', array($this, 'displayPluginAdminSettings'));
   }
 
   public function displayPluginAdminDashboard()
@@ -239,7 +239,7 @@ class Open_Maps_Admin
 
   public function open_maps_display_general_account()
   {
-    echo '<p>' . __('Settings to define map view', 'open-maps') . '</p>';
+    echo '<p>' . __('Geographical coordinates and view settings', 'open-maps') . '</p>';
   }
 
   public function open_maps_render_settings_field($args)

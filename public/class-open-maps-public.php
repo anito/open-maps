@@ -97,8 +97,8 @@ class Open_Maps_Public
      */
 
     $initial_zoomlevel = get_option('open_maps_initial_zoomlevel', 10);
-    $latitude = get_option('open_maps_latitude', 13.80656);
-    $longitude = get_option('open_maps_longitude', 50.83224000000001);
+    $latitude = get_option('open_maps_latitude', 13.41332745563617);
+    $longitude = get_option('open_maps_longitude', 52.522098876428394);
 
     wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/open-maps-public.js', array('jquery'), $this->version, true);
     wp_enqueue_script($this->plugin_name . '-openstreet', plugin_dir_url(__FILE__) . 'js/map.js', array(), $this->version, true);
