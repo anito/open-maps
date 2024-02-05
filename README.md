@@ -1,6 +1,6 @@
 # Open Maps WordPress Plugin
 
-![Plugin Settings Form](./images/hero.jpg)
+![Plugin Settings Form](./images/screenshot.png)
 
 This is a simple WordPress plugin that creates a settings page. The settings page allows WordPress admin users to add their settings for a plugin. 
 
