@@ -316,7 +316,7 @@ function drdsgvo_addMarker(center1) {
     style: new ol_dsgvo.style.Style({
       image: new ol_dsgvo.style.Icon({
         anchor: [0.5, 1],
-        src: drdsgvo_relpath + "/marker.png",
+        src: drdsgvo_relpath + "marker.png",
       }),
     }),
   });
@@ -338,7 +338,7 @@ function drdsgvo_addMarker2(coord_x, coord_y) {
     style: new ol_dsgvo.style.Style({
       image: new ol_dsgvo.style.Icon({
         anchor: [0.5, 1],
-        src: drdsgvo_relpath + "/marker.png",
+        src: drdsgvo_relpath + "marker.png",
       }),
     }),
   });
