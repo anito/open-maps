@@ -128,7 +128,7 @@ drdsgvo_mysource.on("tileloaderror", function () {
   if (drdsgvo_tileerror > 0 && drdsgvo_failover < 50) {
     drdsgvo_failover++;
     drdsgvo_mysource.setUrl(
-      drdsgvo_relpath + "/proxy/index.php?z={z}&x={x}&y={y}&r=osm"
+      drdsgvo_relpath + "proxy/index.php?z={z}&x={x}&y={y}&r=osm"
     );
   }
 });
