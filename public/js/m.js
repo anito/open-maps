@@ -105,7 +105,7 @@ function drdsgvo_resChange() {
 }
 var drdsgvo_mysource = new ol_dsgvo.source.OSM({
   crossOrigin: null,
-  url: drdsgvo_relpath + "/proxy/index.php?z={z}&x={x}&y={y}&r=osm",
+  url: drdsgvo_relpath + "proxy/index.php?z={z}&x={x}&y={y}&r=osm",
   attributions: [
     ol_dsgvo.source.OSM.ATTRIBUTION,
     ' &middot; <a target="_blank" href="https://dr-dsgvo.de/?karte">Lösung von Dr. DSGVO</a>',
