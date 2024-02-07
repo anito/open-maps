@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Open Street Map\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-05 19:54+0000\n"
-"PO-Revision-Date: 2024-02-05 21:13+0000\n"
+"PO-Revision-Date: 2024-02-07 17:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch\n"
 "Language: de_DE\n"
@@ -20,13 +20,17 @@ msgid "Axel Nitzschner"
 msgstr ""
 
 #. ID used to identify this section and with which to register options
-#: admin/class-open-maps-admin.php:165
+#: admin/class-open-maps-admin.php:178
 msgid "General settings"
 msgstr "Allgemeine Einstellungen"
 
-#: admin/class-open-maps-admin.php:242
+#: admin/class-open-maps-admin.php:276
 msgid "Geographical coordinates and view settings"
 msgstr "Geografische Koordinaten und Darstellung"
+
+#: admin/class-open-maps-admin.php:265
+msgid "Grayscale"
+msgstr "Monochrome Karte"
 
 #. Author URI of the plugin
 msgid "https://www.webpremiere.de"
@@ -40,26 +44,26 @@ msgstr ""
 msgid "Interactive Map Substitude for Google Maps"
 msgstr "Interaktive Karte als Ersatz für Google Maps"
 
-#: admin/class-open-maps-admin.php:186
+#: admin/class-open-maps-admin.php:222
 msgid "Latitude"
 msgstr "Breitengrad"
 
-#: admin/class-open-maps-admin.php:209
+#: admin/class-open-maps-admin.php:199
 msgid "Longitude"
 msgstr "Längengrad"
 
 #. Name of the plugin
 msgid "Open Street Map"
-msgstr ""
+msgstr "Open Street Map"
 
-#: admin/class-open-maps-admin.php:109
+#: admin/class-open-maps-admin.php:122
 msgid "Open Street Maps"
-msgstr ""
+msgstr "Open Street Map"
 
 #: admin/partials/open-maps-admin-settings-display.php:18
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: admin/class-open-maps-admin.php:231
+#: admin/class-open-maps-admin.php:244
 msgid "Zoomlevel"
-msgstr "Zoom"
+msgstr "Zoom-Faktor"
