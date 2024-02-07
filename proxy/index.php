@@ -1,7 +1,10 @@
-<?php $z_coord = intval($_GET['z']);
+<?php
+$z_coord = intval($_GET['z']);
 $x_coord = intval($_GET['x']);
 $y_coord = intval($_GET['y']);
 $r_coord = strip_tags($_GET['r']);
+$filter  = isset($_GET['f']) ? $_GET['f'] : false;
+
 function parse_coord($coord)
 {
   global $z_coord, $x_coord, $y_coord;
@@ -16,10 +19,6 @@ function parse_coord($coord)
   $coord = preg_replace('/{x}/', $x_coord, $coord);
   $coord = preg_replace('/{y}/', $y_coord, $coord);
   return $coord;
-}
-function ayQfPZOINvLL9($iCZB6hv11IaJ, $iCZ96hvU1IaJ, $iCZB6hvUVIaJ)
-{
-  return $iCZB6hv11IaJ >= $iCZ96hvU1IaJ && $iCZB6hv11IaJ <= $iCZB6hvUVIaJ;
 }
 function get_image_mod_time($image_file)
 {
@@ -79,9 +78,12 @@ function get_image($image, $image_file)
   unlink($image_file . ".jpg");
   return $image;
 }
-function image_filter($image, $ZCZB6hvU1IaJ = "")
+function image_filter($image)
 {
-  // return imagefilter($image, IMG_FILTER_GRAYSCALE);
+  global $filter;
+  if ($filter) {
+    return imagefilter($image, IMG_FILTER_GRAYSCALE);
+  }
   return $image;
 }
 function output_file($image_file)
@@ -92,7 +94,14 @@ function output_file($image_file)
 function pass_file_data($coord)
 {
   global $ua;
-  $context = stream_context_create(array('http' => array('method' => 'GET',        'user_agent' => $ua,),));
+  $context = stream_context_create(
+    array(
+      'http' => array(
+        'method' => 'GET',
+        'user_agent' => $ua,
+      ),
+    )
+  );
   $file = @fopen($coord, 'rb', false, $context);
   if (!$file) {
     return;
@@ -135,7 +144,12 @@ function handle_header($coord)
 function set_expiration($image_file)
 {
   global $expires;
-  $header = array('Expires:' => gmdate('D, d M Y H:i:s', time() + $expires * 60) . ' GMT',    'Last-Modified:' => gmdate('D, d M Y H:i:s', filemtime($image_file)) . ' GMT',    'Cache-Control:' => 'public, max-age=' . ($expires * 60),    'Content-Type:' => 'image/png',);
+  $header = array(
+    'Expires:'        => gmdate('D, d M Y H:i:s', time() + $expires * 60) . ' GMT',
+    'Last-Modified:'  => gmdate('D, d M Y H:i:s', filemtime($image_file)) . ' GMT',
+    'Cache-Control:'  => 'public, max-age=' . ($expires * 60),
+    'Content-Type:'   => 'image/png'
+  );
   set_header($header);
 }
 function set_header(&$header)

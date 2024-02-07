@@ -53,8 +53,21 @@ class Open_Maps_Admin
 
     $this->plugin_name = $plugin_name;
     $this->version = $version;
+
     add_action('admin_menu', array($this, 'addPluginAdminMenu'), 9);
     add_action('admin_init', array($this, 'registerAndBuildFields'));
+    add_action('option', array($this, 'registerAndBuildFields'));
+    add_action('update_option_open_maps_grayscale', array($this, 'open_maps_grayscale_callback'), 10, 2);
+  }
+
+  /**
+   * Remove tiles directory including its content in order to fetch fresh map tiles
+   */
+  public function open_maps_grayscale_callback($old, $new)
+  {
+
+    $dir = plugin_dir_path(__DIR__) . 'tiles';
+    Open_Maps_Utils::removeDir($dir);
   }
 
   /**
@@ -102,7 +115,7 @@ class Open_Maps_Admin
 
     wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/open-maps-admin.js', array('jquery'), $this->version, false);
   }
-  
+
   public function addPluginAdminMenu()
   {
     //add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position );
@@ -148,7 +161,7 @@ class Open_Maps_Admin
 
   public function registerAndBuildFields()
   {
-    $register = function($id) {
+    $register = function ($id) {
       register_setting(
         'open_maps_general_settings',
         $id,
@@ -229,6 +242,27 @@ class Open_Maps_Admin
     add_settings_field(
       $args['id'],
       __('Zoomlevel', 'open-maps'),
+      array($this, 'open_maps_render_settings_field'),
+      'open_maps_general_settings',
+      'open_maps_general_section',
+      $args
+    );
+    $register($args['id']);
+
+    // Grayscale Filter
+    unset($args);
+    $args = array(
+      'type'      => 'input',
+      'subtype'   => 'checkbox',
+      'id'    => 'open_maps_grayscale',
+      'name'      => 'open_maps_grayscale',
+      'get_options_list' => '',
+      'value_type' => 'normal',
+      'wp_data' => 'option'
+    );
+    add_settings_field(
+      $args['id'],
+      __('Grayscale', 'open-maps'),
       array($this, 'open_maps_render_settings_field'),
       'open_maps_general_settings',
       'open_maps_general_section',

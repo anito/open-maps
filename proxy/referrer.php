@@ -5,8 +5,8 @@
 // a) $schutz_aktiv = true setzen
 // b) in $valids die gültigen Domänen reinschreiben (etwas dirty, bei Bedarf gerne schöner machen)
 function valid_Referrer() {
-    $schutz_aktiv = false;
-    if (!$schutz_aktiv) {
+    $protected = true;
+    if (!$protected) {
         return true;
     } else {
         $referrer = @$_SERVER["HTTP_REFERER"];

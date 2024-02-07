@@ -110,6 +110,12 @@ class Open_Maps {
 		 * of the plugin.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-open-maps-i18n.php';
+		
+		/**
+		 * The class responsible for providing helper utilities
+		 * of the plugin.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-open-maps-utils.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
