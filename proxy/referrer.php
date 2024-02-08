@@ -10,7 +10,7 @@ function valid_Referrer() {
         return true;
     } else {
         $referrer = @$_SERVER["HTTP_REFERER"];
-        $valids = ["://auto-traktor-bretschneider.de", "://www.auto-traktor-bretschneider.de", "://dev.auto-traktor-bretschneider.de", "://auto-traktor-bretschneider.de","://dev.auto-traktor-bretschneider.mbp",];
+        $valids = ["://auto-traktor-bretschneider.de", "://www.auto-traktor-bretschneider.de", "://dev.auto-traktor-bretschneider.de", "://auto-traktor-bretschneider.de","://dev.auto-traktor-bretschneider.test",];
         foreach ($valids as $valid) {
             if (strpos($referrer, $valid) >= 1) {
                 return true;

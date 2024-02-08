@@ -58,6 +58,10 @@ class Open_Maps_Admin
     add_action('admin_init', array($this, 'registerAndBuildFields'));
     add_action('option', array($this, 'registerAndBuildFields'));
     add_action('update_option_open_maps_grayscale', array($this, 'open_maps_grayscale_callback'), 10, 2);
+
+    add_filter('pre_update_option_open_maps_min_zoom', array($this, 'pre_update_option_open_maps_min_zoom'), 10, 3);
+    add_filter('pre_update_option_open_maps_max_zoom', array($this, 'pre_update_option_open_maps_max_zoom'), 20, 3);
+    add_filter('pre_update_option_open_maps_ini_zoom', array($this, 'pre_update_option_open_maps_ini_zoom'), 30, 3);
   }
 
   /**
@@ -68,6 +72,88 @@ class Open_Maps_Admin
 
     $dir = plugin_dir_path(__DIR__) . 'tiles';
     Open_Maps_Utils::removeDir($dir);
+  }
+
+  public function pre_update_option_open_maps_min_zoom($new, $old, $option)
+  {
+
+    if (empty($new)) {
+      return $new;
+    }
+    $max = (int) !empty($max_zoom = get_option('open_maps_max_zoom')) ? $max_zoom : DEFAULT_MAX_ZOOM;
+    if ($new >= $max) {
+      $new = $max - 1;
+      $this->check_zoom($new, $max);
+      return $new;
+    }
+    if ($new< DEFAULT_MIN_ZOOM) {
+      $new = DEFAULT_MIN_ZOOM;
+      $this->check_zoom($new, $max);
+      return $new;
+    }
+    if ($new > DEFAULT_MAX_ZOOM - 1) {
+      $new = DEFAULT_MAX_ZOOM - 1;
+      $this->check_zoom($new, $max);
+      return $new;
+    }
+    $this->check_zoom($new, $max);
+    return $new;
+  }
+
+  public function pre_update_option_open_maps_max_zoom($new, $old, $option)
+  {
+
+    if (empty($new)) {
+      return $new;
+    }
+    $min = (int) !empty($min_zoom = get_option('open_maps_min_zoom')) ? $min_zoom : DEFAULT_MIN_ZOOM;
+    if ($new <= $min) {
+      $new = $min + 1;
+      $this->check_zoom($min, $new);
+      return $new;
+    }
+    if ($new < DEFAULT_MIN_ZOOM + 1) {
+      $new = DEFAULT_MIN_ZOOM + 1;
+      $this->check_zoom($min, $new);
+      return $new;
+    }
+    if ($new > DEFAULT_MAX_ZOOM) {
+      $new = DEFAULT_MAX_ZOOM;
+      $this->check_zoom($min, $new);
+      return $new;
+    }
+    $this->check_zoom($min, $new);
+    return $new;
+  }
+
+  public function pre_update_option_open_maps_ini_zoom($new, $old, $option)
+  {
+
+    if (empty($new)) {
+      return DEFAULT_INI_ZOOM;
+    }
+    $min = (int) !empty($min_zoom = get_option('open_maps_min_zoom')) ? $min_zoom : DEFAULT_MIN_ZOOM;
+    $max = (int) !empty($max_zoom = get_option('open_maps_max_zoom')) ? $max_zoom : DEFAULT_MAX_ZOOM;
+    $new = (int) $new;
+    if ($new < $min) {
+      return $min;
+    }
+    if ($new > $max) {
+      return $max;
+    }
+    return $new;
+  }
+  
+  public function check_zoom($min, $max)
+  {
+    
+    $cur = (int) get_option('open_maps_ini_zoom');
+    if ($cur < $min) {
+      update_option('open_maps_ini_zoom', $min);
+    }
+    if ($cur > $max) {
+      update_option('open_maps_ini_zoom', $max);
+    }
   }
 
   /**
@@ -146,8 +232,8 @@ class Open_Maps_Admin
     switch ($error_message) {
       case '1':
         $message = __('There was an error adding this setting. Please try again.  If this persists, shoot us an email.', 'my-text-domain');
-        $err_code = esc_attr('open_maps_initial_zoomlevel');
-        $setting_field = 'open_maps_initial_zoomlevel';
+        $err_code = esc_attr('open_maps_ini_zoom');
+        $setting_field = 'open_maps_ini_zoom';
         break;
     }
     $type = 'error';
@@ -184,14 +270,14 @@ class Open_Maps_Admin
 
     // Longitude
     $args = array(
-      'type'      => 'input',
-      'subtype'   => 'text',
-      'id'    => 'open_maps_longitude',
-      'name'      => 'open_maps_longitude',
-      'required' => 'true',
-      'get_options_list' => '',
-      'value_type' => 'normal',
-      'wp_data' => 'option'
+      'type'              => 'input',
+      'subtype'           => 'text',
+      'id'                => 'open_maps_longitude',
+      'name'              => 'open_maps_longitude',
+      'required'          => 'required="required"',
+      'get_options_list'  => '',
+      'value_type'        => 'normal',
+      'wp_data'           => 'option'
     );
 
     add_settings_field(
@@ -207,14 +293,14 @@ class Open_Maps_Admin
     // Latitude
     unset($args);
     $args = array(
-      'type'      => 'input',
-      'subtype'   => 'text',
-      'id'    => 'open_maps_latitude',
-      'name'      => 'open_maps_latitude',
-      'required' => 'true',
-      'get_options_list' => '',
-      'value_type' => 'normal',
-      'wp_data' => 'option'
+      'type'              => 'input',
+      'subtype'           => 'text',
+      'id'                => 'open_maps_latitude',
+      'name'              => 'open_maps_latitude',
+      'required'          => 'required="required"',
+      'get_options_list'  => '',
+      'value_type'        => 'normal',
+      'wp_data'           => 'option'
     );
 
     add_settings_field(
@@ -230,18 +316,68 @@ class Open_Maps_Admin
     // Zoomlevel
     unset($args);
     $args = array(
-      'type'      => 'input',
-      'subtype'   => 'text',
-      'id'    => 'open_maps_initial_zoomlevel',
-      'name'      => 'open_maps_initial_zoomlevel',
-      'required' => 'true',
-      'get_options_list' => '',
-      'value_type' => 'normal',
-      'wp_data' => 'option'
+      'type'              => 'input',
+      'subtype'           => 'number',
+      'min'               => DEFAULT_MIN_ZOOM,
+      'max'               => DEFAULT_MAX_ZOOM,
+      'placeholder'       => DEFAULT_INI_ZOOM,
+      'id'                => 'open_maps_ini_zoom',
+      'name'              => 'open_maps_ini_zoom',
+      'get_options_list'  => '',
+      'value_type'        => 'normal',
+      'wp_data'           => 'option'
     );
     add_settings_field(
       $args['id'],
       __('Zoomlevel', 'open-maps'),
+      array($this, 'open_maps_render_settings_field'),
+      'open_maps_general_settings',
+      'open_maps_general_section',
+      $args
+    );
+    $register($args['id']);
+
+    // Min Zoom
+    unset($args);
+    $args = array(
+      'type'              => 'input',
+      'subtype'           => 'number',
+      'min'               => DEFAULT_MIN_ZOOM,
+      'max'               => DEFAULT_MAX_ZOOM,
+      'placeholder'       => DEFAULT_MIN_ZOOM,
+      'id'                => 'open_maps_min_zoom',
+      'name'              => 'open_maps_min_zoom',
+      'get_options_list'  => '',
+      'value_type'        => 'normal',
+      'wp_data'           => 'option'
+    );
+    add_settings_field(
+      $args['id'],
+      __('Min. Zoom', 'open-maps'),
+      array($this, 'open_maps_render_settings_field'),
+      'open_maps_general_settings',
+      'open_maps_general_section',
+      $args
+    );
+    $register($args['id']);
+
+    // Max Zoom
+    unset($args);
+    $args = array(
+      'type'              => 'input',
+      'subtype'           => 'number',
+      'min'               => DEFAULT_MIN_ZOOM,
+      'max'               => DEFAULT_MAX_ZOOM,
+      'placeholder'       => DEFAULT_MAX_ZOOM,
+      'id'                => 'open_maps_max_zoom',
+      'name'              => 'open_maps_max_zoom',
+      'get_options_list'  => '',
+      'value_type'        => 'normal',
+      'wp_data'           => 'option'
+    );
+    add_settings_field(
+      $args['id'],
+      __('Max. Zoom', 'open-maps'),
       array($this, 'open_maps_render_settings_field'),
       'open_maps_general_settings',
       'open_maps_general_section',
@@ -300,22 +436,24 @@ class Open_Maps_Admin
 
       case 'input':
         $value = ($args['value_type'] == 'serialized') ? serialize($wp_data_value) : $wp_data_value;
+        $required = (isset($args['required'])) ? $args['required'] : '';
         if ($args['subtype'] != 'checkbox') {
           $prependStart = (isset($args['prepend_value'])) ? '<div class="input-prepend"> <span class="add-on">' . $args['prepend_value'] . '</span>' : '';
           $prependEnd = (isset($args['prepend_value'])) ? '</div>' : '';
           $step = (isset($args['step'])) ? 'step="' . $args['step'] . '"' : '';
           $min = (isset($args['min'])) ? 'min="' . $args['min'] . '"' : '';
           $max = (isset($args['max'])) ? 'max="' . $args['max'] . '"' : '';
+          $placeholder = (isset($args['placeholder'])) ? 'placeholder="' . $args['placeholder'] . '"' : '';
           if (isset($args['disabled'])) {
             // hide the actual input bc if it was just a disabled input the info saved in the database would be wrong - bc it would pass empty values and wipe the actual information
-            echo $prependStart . '<input type="' . $args['subtype'] . '" id="' . $args['id'] . '_disabled" ' . $step . ' ' . $max . ' ' . $min . ' name="' . $args['name'] . '_disabled" size="40" disabled value="' . esc_attr($value) . '" /><input type="hidden" id="' . $args['id'] . '" ' . $step . ' ' . $max . ' ' . $min . ' name="' . $args['name'] . '" size="40" value="' . esc_attr($value) . '" />' . $prependEnd;
+            echo $prependStart . '<input type="' . $args['subtype'] . '" ' . $placeholder . ' id="' . $args['id'] . '_disabled" ' . $step . ' ' . $max . ' ' . $min . ' name="' . $args['name'] . '_disabled" size="40" disabled value="' . esc_attr($value) . '" /><input type="hidden" id="' . $args['id'] . '" ' . $step . ' ' . $max . ' ' . $min . ' name="' . $args['name'] . '" size="40" value="' . esc_attr($value) . '" />' . $prependEnd;
           } else {
-            echo $prependStart . '<input type="' . $args['subtype'] . '" id="' . $args['id'] . '" "' . $args['required'] . '" ' . $step . ' ' . $max . ' ' . $min . ' name="' . $args['name'] . '" size="40" value="' . esc_attr($value) . '" />' . $prependEnd;
+            echo $prependStart . '<input type="' . $args['subtype'] . '" ' . $placeholder . ' id="' . $args['id'] . '"' . $required . $step . ' ' . $max . ' ' . $min . ' name="' . $args['name'] . '" size="40" value="' . esc_attr($value) . '" />' . $prependEnd;
           }
           /*<input required="required" '.$disabled.' type="number" step="any" id="'.$this->plugin_name.'_cost2" name="'.$this->plugin_name.'_cost2" value="' . esc_attr( $cost ) . '" size="25" /><input type="hidden" id="'.$this->plugin_name.'_cost" step="any" name="'.$this->plugin_name.'_cost" value="' . esc_attr( $cost ) . '" />*/
         } else {
           $checked = ($value) ? 'checked' : '';
-          echo '<input type="' . $args['subtype'] . '" id="' . $args['id'] . '" "' . $args['required'] . '" name="' . $args['name'] . '" size="40" value="1" ' . $checked . ' />';
+          echo '<input type="' . $args['subtype'] . '" id="' . $args['id'] . '"' . $required . ' name="' . $args['name'] . '" size="40" value="1" ' . $checked . ' />';
         }
         break;
       default:

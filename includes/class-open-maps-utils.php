@@ -39,6 +39,11 @@ class Open_Maps_Utils {
 	 */
 	public static function removeDir(string $dir): void
 	{
+		// Nothing to delete
+		if(!is_dir($dir)) {
+			return;
+		}
+
 		$it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
 		$files = new RecursiveIteratorIterator(
 			$it,
