@@ -3,9 +3,9 @@ const { latitude, longitude, ini_zoom, min_zoom, max_zoom, filter } =
 
 console.log(OpenStreetParams);
 
-const ol_zoom = ini_zoom + 1;
-const ol_minzoom = min_zoom; // 9
-const ol_maxzoom = max_zoom; // 18
+const ol_zoom = parseInt(ini_zoom);
+const ol_minzoom = parseInt(min_zoom); // 9
+const ol_maxzoom = parseInt(max_zoom); // 18
 const ol_lat = parseFloat(latitude);
 const ol_lon = parseFloat(longitude);
 const ol_script = document.currentScript;
@@ -36,6 +36,7 @@ let ol_tileerror = 0;
 let ol_failover = 0;
 
 let ol_map;
+let ol_view;
 let ol_extent;
 let ol_maxResolution;
 let ol_resolution = 0;
@@ -43,13 +44,6 @@ let ol_center = null;
 let ol_layer = null;
 let ol_x;
 let ol_y;
-
-const ol_view = new ol.View({
-  center: ol.proj.transform([ol_lon, ol_lat], EPSG[0], EPSG[1]),
-  zoom: 100,
-  minZoom: ol_minzoom,
-  maxZoom: ol_maxzoom,
-});
 
 function ol_res_change_handler(e) {
   let oldView = ol_map.getView();
@@ -110,7 +104,10 @@ function ol_res_change_handler(e) {
 }
 let ol_source = new ol.source.OSM({
   crossOrigin: null,
-  url: `${ol_path.replace("/public/js", "")}${"proxy/index.php?u={u}&z={z}&x={x}&y={y}&r=osm"}${filter ? "&f=1" : ""}`,
+  url: `${ol_path.replace(
+    "/public/js",
+    ""
+  )}${"proxy/index.php?z={z}&x={x}&y={y}&r=osm"}${filter ? "&f=1" : ""}`,
   attributions: [
     ol.source.OSM.ATTRIBUTION,
     '&middot; <a target="_blank" href="https://dr-dsgvo.de/?karte">Lösung von Dr. DSGVO</a>',
@@ -133,13 +130,22 @@ ol_source.on("tileloaderror", function () {
   if (ol_tileerror > 0 && ol_failover < 50) {
     ol_failover++;
     ol_source.setUrl(
-      `${ol_path.replace("/public/js", "")}${"proxy/index.php?z={z}&x={x}&y={y}&r=osm"}${filter ? "&f=1" : ""}`
+      `${ol_path.replace(
+        "/public/js",
+        ""
+      )}${"proxy/index.php?z={z}&x={x}&y={y}&r=osm"}${filter ? "&f=1" : ""}`
     );
   }
 });
 
 function ol_initAll() {
-  
+  ol_view = new ol.View({
+    center: ol.proj.transform([ol_lon, ol_lat], EPSG[0], EPSG[1]),
+    zoom: 100,
+    minZoom: ol_minzoom,
+    maxZoom: ol_maxzoom,
+  });
+
   let ol_mouseWheelZoom = true;
   if (window?.screen) {
     if (
@@ -239,7 +245,7 @@ function ol_initAll() {
     if (!ol_initView(ol_map)) return;
     ol_maxResolution = ol_view.getResolution();
     ol_res_change_handler();
-    ol_map.getView().setZoom(ol_zoom - ol_minzoom);
+    ol_map.getView().setZoom((ol_zoom - ol_minzoom) || 1);
     ol_init_handler();
     ol_addMarker();
   });

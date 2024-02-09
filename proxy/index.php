@@ -38,7 +38,7 @@ function is_valid_ressource($url)
   }
   return false;
 }
-function serve_image($url, $dir, $file)
+function fetch($url, $dir, $file)
 {
   global $ua;
   if (!is_dir($dir)) {
@@ -179,7 +179,7 @@ if ($z >= 21) {
   pass_file_data($osm_tile_url);
   exit;
 }
-if (false || !is_file($file) || (get_file_mod_time($file) && is_valid_ressource($osm_tile_url))) {
-  serve_image($osm_tile_url, $dir, $file);
+if (!is_file($file) || (get_file_mod_time($file) && is_valid_ressource($osm_tile_url))) {
+  fetch($osm_tile_url, $dir, $file);
 }
 output_file($file);

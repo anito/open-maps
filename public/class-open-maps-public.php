@@ -98,7 +98,7 @@ class Open_Maps_Public
 
     $longitude         = get_option('open_maps_longitude', 52.522098876428394);
     $latitude          = get_option('open_maps_latitude', 13.41332745563617);
-    $ini_zoom          = !empty($ini_zoom = get_option('open_maps_ini_zoom')) ? $ini_zoom : DEFAULT_INI_ZOOM;
+    $ini_zoom          = (int) !empty($ini_zoom = get_option('open_maps_ini_zoom')) ? $ini_zoom : DEFAULT_INI_ZOOM;
     $min_zoom          = (int) !empty($min_zoom = get_option('open_maps_min_zoom')) ? $min_zoom : DEFAULT_MIN_ZOOM;
     $max_zoom          = (int) !empty($max_zoom = get_option('open_maps_max_zoom')) ? $max_zoom : DEFAULT_MAX_ZOOM;
     $filter            = get_option('open_maps_grayscale');
