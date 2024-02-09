@@ -2,10 +2,10 @@
 $z = intval($_GET['z']);
 $x = intval($_GET['x']);
 $y = intval($_GET['y']);
-$r = strip_tags($_GET['r']);
+$r_coord = strip_tags($_GET['r']);
 $filter  = isset($_GET['f']) ? $_GET['f'] : false;
 
-function parse_osm_url($url)
+function parse_url($url)
 {
   global $z, $x, $y;
   $match = preg_match('/{switch:(.*?)}/', $url, $matches);
@@ -22,10 +22,10 @@ function parse_osm_url($url)
 }
 function get_file_mod_time($file)
 {
-  global $max_age;
-  return filemtime($file) < time() - $max_age * 30;
+  global $expires;
+  return filemtime($file) < time() - ($expires * 30);
 }
-function is_valid_ressource($url)
+function is_valid_coord($url)
 {
   $ch = curl_init($url);
   curl_setopt($ch, CURLOPT_NOBODY, true);
@@ -38,13 +38,13 @@ function is_valid_ressource($url)
   }
   return false;
 }
-function serve_image($url, $dir, $file)
+function serve_image($url, $dir, $filename)
 {
   global $ua;
   if (!is_dir($dir)) {
     mkdir($dir, 0755, true);
   }
-  $fn = str_ends_with($file, '.png') ? $file : $file . '.png';
+  $fn = $filename . '.png';
   $file = fopen($fn, 'wb');
   $ch = curl_init($url);
   curl_setopt($ch, CURLOPT_FILE, $file);
@@ -61,21 +61,23 @@ function serve_image($url, $dir, $file)
   fclose($file);
   $image = imagecreatefrompng($fn);
   if ($image) {
-    $image = get_image($image, $file);
+    $image = get_image($image, $fn);
   }
   if ($image && image_filter($image)) {
-    imagepng($image, $file);
+    imagepng($image, $fn);
     unlink($fn);
   } else {
-    @rename($fn, $file);
+    @rename($fn, $filename);
   }
-  imagedestroy($image);
+  if($image) {
+    imagedestroy($image);
+  }
 }
-function get_image($image, $file)
+function get_image($image, $fn)
 {
-  imagejpeg($image, $file . ".jpg");
-  $image = imagecreatefromjpeg($file . ".jpg");
-  unlink($file . ".jpg");
+  imagejpeg($image, $fn . ".jpg");
+  $image = imagecreatefromjpeg($fn . ".jpg");
+  unlink($fn . ".jpg");
   return $image;
 }
 function image_filter($image)
@@ -86,10 +88,10 @@ function image_filter($image)
   }
   return $image;
 }
-function output_file($file)
+function output_image($fn)
 {
-  set_expiration($file);
-  readfile($file);
+  set_file_headers($fn);
+  readfile($fn);
 }
 function pass_file_data($url)
 {
@@ -109,7 +111,7 @@ function pass_file_data($url)
   handle_header($url);
   fpassthru($file);
 }
-function process_coord($url)
+function start_session($url)
 {
   global $ua;
   $data = [];
@@ -123,7 +125,7 @@ function process_coord($url)
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   }
-  curl_setopt($ch, CURLOPT_HEADERFUNCTION,    function ($handle, $option) use (&$data) {
+  curl_setopt($ch, CURLOPT_HEADERFUNCTION, function ($handle, $option) use (&$data) {
     $data[] = $option;
     return strlen($option);
   });
@@ -138,16 +140,16 @@ function allowed_addresses()
 }
 function handle_header($url)
 {
-  $header = process_coord($url);
+  $header = start_session($url);
   send_header($header);
 }
-function set_expiration($file)
+function set_file_headers($file)
 {
-  global $max_age;
+  global $expires;
   $header = array(
-    'Expires:'        => gmdate('D, d M Y H:i:s', time() + $max_age * 60) . ' GMT',
+    'Expires:'        => gmdate('D, d M Y H:i:s', time() + $expires * 60) . ' GMT',
     'Last-Modified:'  => gmdate('D, d M Y H:i:s', filemtime($file)) . ' GMT',
-    'Cache-Control:'  => 'public, max-age=' . $max_age * 60,
+    'Cache-Control:'  => 'public, max-age=' . ($expires * 60),
     'Content-Type:'   => 'image/png'
   );
   send_header($header);
@@ -168,18 +170,22 @@ function send_header(&$header)
   }
 }
 $ua = 'Browser-Proxy/0.2';
-$res = array(
-  'osm' => 'https://{switch:a,b,c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+$osm = array('osm' => 'https://{switch:a,b,c}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+$osm = @$iCZB6hvU1DaJ['servers'] ?: array('osm' => 'https://{switch:a,b,c}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+$url = parse_url($osm[$r_coord]);
+$expires = 1186400;
+$header = array(
+  'Access-Control-Allow-Origin:' => '*',
+  'Content-TYpe' => 'image/png'
 );
-$max_age = 1186400;
-$osm_tile_url = parse_osm_url($res[$r]);
 $dir = "../tiles/" . $z . "/" . $x;
-$file = $dir . "/" . $y . ".png";
+$fn = $dir . "/" . $y . ".png";
+
 if ($z >= 21) {
-  pass_file_data($osm_tile_url);
+  pass_file_data($url);
   exit;
 }
-if (false || !is_file($file) || (get_file_mod_time($file) && is_valid_ressource($osm_tile_url))) {
-  serve_image($osm_tile_url, $dir, $file);
+if (!is_file($fn) || (get_file_mod_time($fn) && is_valid_coord($url))) {
+  serve_image($url, $dir, $fn);
 }
-output_file($file);
+output_image($fn);

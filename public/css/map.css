@@ -1,4 +1,4 @@
-.drdsgvo-box {
+.ol-box {
   box-sizing: border-box;
   border-radius: 2px;
   border: 2px solid #00f;
@@ -171,7 +171,9 @@
   max-width: inherit;
   vertical-align: middle;
 }
-.ol-attribution button,
+.ol-attribution button {
+  display: none;
+}
 .ol-attribution ul {
   display: inline-block !important;
 }
@@ -255,7 +257,7 @@
 .ol-overviewmap .ol-overviewmap-box:hover {
   cursor: move;
 }
-.drdsgvo_ol-popup {
+.ol-popup {
   font-family: "Lucida Grande", Verdana, Geneva, Lucida, Arial, Helvetica,
     sans-serif !important;
   font-size: 12px;
@@ -275,24 +277,29 @@
   max-width: 100%;
   max-height: 12px;
 }
-.drdsgvo_initbtn img1 {
-  background: #7694ba;
+.ol-init-btn img {
+  cursor: pointer;
+  width: 20px;
+  margin: 0 auto;
 }
-.drdsgvo_initbtn {
+.ol-init-btn {
   top: 72px;
-  left: 0.85em;
+  left: 0.55em;
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
 }
-.ol-touch .drdsgvo_initbtn {
+.ol-touch .ol-init-btn {
   top: 80px;
 }
-.drdsgvo_routebtn {
+.ol-route-btn {
   top: 10px;
   left: 2.7em;
 }
-.ol-touch .drdsgvo_routebtn {
+.ol-touch .ol-route-btn {
   top: 10px;
 }
-.drdsgvo_btn {
+.ol-btn {
   width: 100%;
   font-size: 12px !important;
   padding: 4px !important;
@@ -300,7 +307,7 @@
   width: 100% !important;
   max-width: 130px;
 }
-.drdsgvo_btn a {
+.ol-btn a {
   color: #fff !important;
   text-decoration: none;
 }
@@ -308,18 +315,18 @@
   .ol-zoom {
     display: none;
   }
-  .drdsgvo_routebtn {
+  .ol-route-btn {
     left: 0.5em;
   }
   .ol-attribution ul {
     font-size: 0.51rem !important;
   }
   .ol-control button,
-  .drdsgvo_btn a {
+  .ol-btn a {
     font-size: 0.9em;
     font-weight: 300;
   }
-  .ol-touch .drdsgvo_initbtn {
+  .ol-touch .ol-init-btn {
     top: 60px;
   }
 }

@@ -16,7 +16,7 @@
  * Plugin Name:       Open Street Map
  * Plugin URI:        https://www.wplauncher.com
  * Description:       Interactive Map Substitude for Google Maps
- * Version:           1.0.4
+ * Version:           1.0.5
  * Author:            Axel Nitzschner
  * Author URI:        https://www.webpremiere.de
  * License:           GPL-2.0+
@@ -35,8 +35,8 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'OPEN_MAPS_VERSION', '1.0.4' );
-define( 'DEFAULT_INI_ZOOM', 9 );
+define( 'OPEN_MAPS_VERSION', '1.0.5' );
+define( 'DEFAULT_INI_ZOOM', 15 );
 define( 'DEFAULT_MIN_ZOOM', 9 );
 define( 'DEFAULT_MAX_ZOOM', 18 );
 

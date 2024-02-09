@@ -325,7 +325,8 @@ class Open_Maps_Admin
       'name'              => 'open_maps_ini_zoom',
       'get_options_list'  => '',
       'value_type'        => 'normal',
-      'wp_data'           => 'option'
+      'wp_data'           => 'option',
+      'label'             => sprintf(__('[%d - %d]', 'open-maps'), DEFAULT_MIN_ZOOM, DEFAULT_MAX_ZOOM),
     );
     add_settings_field(
       $args['id'],
@@ -338,52 +339,52 @@ class Open_Maps_Admin
     $register($args['id']);
 
     // Min Zoom
-    unset($args);
-    $args = array(
-      'type'              => 'input',
-      'subtype'           => 'number',
-      'min'               => DEFAULT_MIN_ZOOM,
-      'max'               => DEFAULT_MAX_ZOOM,
-      'placeholder'       => DEFAULT_MIN_ZOOM,
-      'id'                => 'open_maps_min_zoom',
-      'name'              => 'open_maps_min_zoom',
-      'get_options_list'  => '',
-      'value_type'        => 'normal',
-      'wp_data'           => 'option'
-    );
-    add_settings_field(
-      $args['id'],
-      __('Min. Zoom', 'open-maps'),
-      array($this, 'open_maps_render_settings_field'),
-      'open_maps_general_settings',
-      'open_maps_general_section',
-      $args
-    );
-    $register($args['id']);
+    // unset($args);
+    // $args = array(
+    //   'type'              => 'input',
+    //   'subtype'           => 'number',
+    //   'min'               => DEFAULT_MIN_ZOOM,
+    //   'max'               => DEFAULT_MAX_ZOOM,
+    //   'placeholder'       => DEFAULT_MIN_ZOOM,
+    //   'id'                => 'open_maps_min_zoom',
+    //   'name'              => 'open_maps_min_zoom',
+    //   'get_options_list'  => '',
+    //   'value_type'        => 'normal',
+    //   'wp_data'           => 'option'
+    // );
+    // add_settings_field(
+    //   $args['id'],
+    //   __('Min. Zoom', 'open-maps'),
+    //   array($this, 'open_maps_render_settings_field'),
+    //   'open_maps_general_settings',
+    //   'open_maps_general_section',
+    //   $args
+    // );
+    // $register($args['id']);
 
     // Max Zoom
-    unset($args);
-    $args = array(
-      'type'              => 'input',
-      'subtype'           => 'number',
-      'min'               => DEFAULT_MIN_ZOOM,
-      'max'               => DEFAULT_MAX_ZOOM,
-      'placeholder'       => DEFAULT_MAX_ZOOM,
-      'id'                => 'open_maps_max_zoom',
-      'name'              => 'open_maps_max_zoom',
-      'get_options_list'  => '',
-      'value_type'        => 'normal',
-      'wp_data'           => 'option'
-    );
-    add_settings_field(
-      $args['id'],
-      __('Max. Zoom', 'open-maps'),
-      array($this, 'open_maps_render_settings_field'),
-      'open_maps_general_settings',
-      'open_maps_general_section',
-      $args
-    );
-    $register($args['id']);
+    // unset($args);
+    // $args = array(
+    //   'type'              => 'input',
+    //   'subtype'           => 'number',
+    //   'min'               => DEFAULT_MIN_ZOOM,
+    //   'max'               => DEFAULT_MAX_ZOOM,
+    //   'placeholder'       => DEFAULT_MAX_ZOOM,
+    //   'id'                => 'open_maps_max_zoom',
+    //   'name'              => 'open_maps_max_zoom',
+    //   'get_options_list'  => '',
+    //   'value_type'        => 'normal',
+    //   'wp_data'           => 'option'
+    // );
+    // add_settings_field(
+    //   $args['id'],
+    //   __('Max. Zoom', 'open-maps'),
+    //   array($this, 'open_maps_render_settings_field'),
+    //   'open_maps_general_settings',
+    //   'open_maps_general_section',
+    //   $args
+    // );
+    // $register($args['id']);
 
     // Grayscale Filter
     unset($args);
@@ -459,6 +460,13 @@ class Open_Maps_Admin
       default:
         # code...
         break;
+    }
+
+    if (isset($args['label'])) {
+      echo '<label for="' . $args['id'] . '" class="description">&nbsp;' . $args['label'] . '</label>';
+    }
+    if (isset($args['description'])) {
+      echo '<p class="description">' . $args['description'] . '</p>';
     }
   }
 }

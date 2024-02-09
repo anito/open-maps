@@ -108,7 +108,7 @@ class Open_Maps_Public
     wp_localize_script($this->plugin_name . '-open-maps-main', 'OpenStreetParams', array(
       'longitude' => $longitude,
       'latitude'  => $latitude,
-      'initial_zoomlevel'  => $ini_zoom,
+      'ini_zoom'  => $ini_zoom,
       'min_zoom'  => $min_zoom,
       'max_zoom'  => $max_zoom,
       'filter'    => $filter,
@@ -124,9 +124,7 @@ class Open_Maps_Public
       'id' => '1',
     ), $atts, 'iak');
 
-    $daten = "<div tabindex=\"700\" id=\"drdsgvo_map_" . $atts['id'] . "\" class=\"drdsgvo_map\" style=\"height:100%;margin:0;padding:0\"></div>";
-    
-    return ($daten);
+    return '<div tabindex="700" id="ol-map-' . $atts["id"] . '" class="ol-map" style="height: 100%; margin: 0; padding: 0;"></div>';
   }
 
   public function register_shortcode()

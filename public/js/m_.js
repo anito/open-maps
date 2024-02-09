@@ -1,13 +1,11 @@
-const { latitude, longitude, ini_zoom, min_zoom, max_zoom, filter } = OpenStreetParams;
+const { initial_zoomlevel, latitude, longitude, filter } = OpenStreetParams;
+// const { latitude, longitude, ini_zoom, min_zoom, max_zoom, filter } = OpenStreetParams;
+const wbp_zoom = parseFloat(initial_zoomlevel);
 const wbp_lat = parseFloat(latitude);
 const wbp_long = parseFloat(longitude);
 const drdsgvo_script = document.currentScript;
 const drdsgvo_script_url = drdsgvo_script.src;
 const drdsgvo_root = document.location.hostname;
-const EPSG = [
-  "EPSG:4326",
-  "EPSG:3857"
-]
 
 let drdsgvo_path;
 let drdsgvo_idx1 = (" " + drdsgvo_script_url).indexOf(drdsgvo_root);
@@ -27,10 +25,8 @@ if (drdsgvo_idx1 > 0) {
 let drdsgvo_center_x = null;
 let drdsgvo_center_y = null;
 let drdsgvo_zoom = null;
-
-let drdsgvo_minzoom = min_zoom;
-let drdsgvo_maxzoom = max_zoom;
-
+let drdsgvo_minzoom = 9;
+let drdsgvo_maxzoom = 18;
 let drdsgvo_zooms = drdsgvo_maxzoom - drdsgvo_minzoom;
 let drdsgv_attribution = new ol_dsgvo.control.Attribution({
   collapsible: false,
@@ -48,8 +44,8 @@ let drdsgvo_maxResolution;
 let drdsgvo_resolution = 0;
 let drdsgvo_center = null;
 let drdsgvo_layer = null;
-let drdsgvo_x;
-let drdsgvo_y;
+let drdsgvo_my_x;
+let drdsgvo_my_y;
 
 function drdsgvo_resChange() {
   let oldView = drdsgvo_map.getView();
@@ -76,6 +72,7 @@ function drdsgvo_resChange() {
       } else if (ozoom > 8) {
         of = 0.05;
       }
+      of = 1;
       drdsgvo_extent2 = ol_dsgvo.proj.transformExtent(
         [
           wbp_long - drdsgvo_deltax * of,
@@ -108,7 +105,7 @@ function drdsgvo_resChange() {
     drdsgvo_map.setView(newView);
   }
 }
-let drdsgvo_source = new ol_dsgvo.source.OSM({
+let drdsgvo_mysource = new ol_dsgvo.source.OSM({
   crossOrigin: null,
   url: `${drdsgvo_path.replace('/public/js', '')}${'proxy/index.php?z={z}&x={x}&y={y}&r=osm'}${filter ? '&f=1' : ''}`,
   attributions: [
@@ -120,19 +117,19 @@ let drdsgvo_source = new ol_dsgvo.source.OSM({
 });
 
 let drdsgv_tileserver = new ol_dsgvo.layer.Tile({
-  source: drdsgvo_source,
+  source: drdsgvo_mysource,
   declutter: true,
   maxZoom: drdsgvo_maxzoom,
 });
 
-drdsgvo_source.on("tileloadend", function () {
+drdsgvo_mysource.on("tileloadend", function () {
   drdsgvo_tileerror = 0;
 });
-drdsgvo_source.on("tileloaderror", function () {
+drdsgvo_mysource.on("tileloaderror", function () {
   drdsgvo_tileerror++;
   if (drdsgvo_tileerror > 0 && drdsgvo_failover < 50) {
     drdsgvo_failover++;
-    drdsgvo_source.setUrl(
+    drdsgvo_mysource.setUrl(
       `${drdsgvo_path.replace('/public/js', '')}${'proxy/index.php?z={z}&x={x}&y={y}&r=osm'}`
     );
   }
@@ -145,7 +142,7 @@ function drdsgvo_initAll() {
       "EPSG:4326",
       "EPSG:3857"
     ),
-    zoom: ini_zoom,
+    zoom: 15,
     minZoom: drdsgvo_minzoom,
     maxZoom: drdsgvo_maxzoom,
   });
@@ -202,7 +199,7 @@ function drdsgvo_initAll() {
         wbp_lat +
         "&mlon=" +
         wbp_long +
-        "#map=" +  ini_zoom + "/" +
+        "#map=" +  wbp_zoom + "/" +
         wbp_lat +
         "/" +
         wbp_long +
@@ -249,7 +246,7 @@ function drdsgvo_initAll() {
     if (!drdsgvo_initView(drdsgvo_map)) return;
     drdsgvo_maxResolution = drdsgvo_view.getResolution();
     drdsgvo_resChange();
-    drdsgvo_map.getView().setZoom(ini_zoom - drdsgvo_minzoom);
+    drdsgvo_map.getView().setZoom(wbp_zoom - drdsgvo_minzoom);
     handledrdsgvo_Init();
     drdsgvo_addMarker();
   });
@@ -301,19 +298,19 @@ function drdsgvo_addMarker(center1) {
       "EPSG:3857",
       "EPSG:4326"
     );
-    drdsgvo_x = center[0];
-    drdsgvo_y = center[1];
+    drdsgvo_my_x = center[0];
+    drdsgvo_my_y = center[1];
   } else {
     let center = ol_dsgvo.proj.transform(center1, "EPSG:3857", "EPSG:4326");
-    drdsgvo_x = center[0];
-    drdsgvo_y = center[1];
+    drdsgvo_my_x = center[0];
+    drdsgvo_my_y = center[1];
   }
   drdsgvo_layer = new ol_dsgvo.layer.Vector({
     source: new ol_dsgvo.source.Vector({
       features: [
         new ol_dsgvo.Feature({
           geometry: new ol_dsgvo.geom.Point(
-            ol_dsgvo.proj.fromLonLat([drdsgvo_x, drdsgvo_y])
+            ol_dsgvo.proj.fromLonLat([drdsgvo_my_x, drdsgvo_my_y])
           ),
         }),
       ],
