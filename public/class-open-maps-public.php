@@ -99,8 +99,8 @@ class Open_Maps_Public
     $longitude         = get_option('open_maps_longitude', 52.522098876428394);
     $latitude          = get_option('open_maps_latitude', 13.41332745563617);
     $ini_zoom          = (int) !empty($ini_zoom = get_option('open_maps_ini_zoom')) ? $ini_zoom : DEFAULT_INI_ZOOM;
-    $min_zoom          = (int) !empty($min_zoom = get_option('open_maps_min_zoom')) ? $min_zoom : DEFAULT_MIN_ZOOM;
-    $max_zoom          = (int) !empty($max_zoom = get_option('open_maps_max_zoom')) ? $max_zoom : DEFAULT_MAX_ZOOM;
+    $min_zoom          = DEFAULT_MIN_ZOOM;
+    $max_zoom          = DEFAULT_MAX_ZOOM;
     $filter            = get_option('open_maps_grayscale');
 
     wp_enqueue_script($this->plugin_name . '-open-maps', plugin_dir_url(__FILE__) . 'js/map.js', array(), $this->version, true);
@@ -121,10 +121,11 @@ class Open_Maps_Public
   function iak($atts)
   {
     $atts = shortcode_atts(array(
-      'id' => '1',
+      'id'    => '1',
+      'zoom'  => !empty($ini_zoom = get_option('open_maps_ini_zoom')) ? $ini_zoom : DEFAULT_INI_ZOOM
     ), $atts, 'iak');
 
-    return '<div tabindex="700" id="ol-map-' . $atts["id"] . '" class="ol-map" style="height: 100%; margin: 0; padding: 0;"></div>';
+    return '<div tabindex="700" id="ol-map-' . $atts["id"] . '" data-id="' . $atts['id'] . '" data-zoom="' . $atts["zoom"] . '" class="ol-map" style="height: 100%; margin: 0; padding: 0;"></div>';
   }
 
   public function register_shortcode()

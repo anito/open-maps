@@ -1,10 +1,10 @@
 const { latitude, longitude, ini_zoom, min_zoom, max_zoom, span_zoom, filter } =
   OpenStreetParams;
 
+const maps = new Map();
 const ol_minzoom = parseInt(min_zoom); // 9
 const ol_maxzoom = parseInt(max_zoom); // 18
 const ol_zooms = ol_maxzoom - ol_minzoom;
-const ol_zoom = ol_zooms + parseInt(ini_zoom);
 const ol_lat = parseFloat(latitude);
 const ol_lon = parseFloat(longitude);
 const ol_script = document.currentScript;
@@ -15,6 +15,7 @@ const ol_deltay = 0.3;
 const ol_attribution = new ol.control.Attribution({ collapsible: false });
 const EPSG = ["EPSG:4326", "EPSG:3857"];
 
+let ol_zoom;
 let ol_path;
 let ol_idx1 = (" " + ol_script_url).indexOf(ol_root);
 if (ol_idx1 > 0) {
@@ -33,18 +34,17 @@ if (ol_idx1 > 0) {
 let ol_tileerror = 0;
 let ol_failover = 0;
 
-let ol_map;
 let ol_view;
 let ol_extent;
 let ol_maxResolution;
 let ol_resolution = 0;
 
-function ol_res_change_handler(e) {
-  let oldView = ol_map.getView();
+function ol_res_change_handler(map) {
+  let oldView = map.getView();
   if (ol_resolution == 0 || oldView.getZoom() % 1 == 0) {
     ol_resolution = oldView.getResolution();
-    let width = ol_map.getSize()[0] * ol_resolution;
-    let height = ol_map.getSize()[1] * ol_resolution;
+    let width = map.getSize()[0] * ol_resolution;
+    let height = map.getSize()[1] * ol_resolution;
     let ozoom = oldView.getZoom();
     let ol_extent2;
     if (ozoom <= 4 || ozoom > 6) {
@@ -92,8 +92,8 @@ function ol_res_change_handler(e) {
       rotation: oldView.getRotation(),
     });
     newView.setCenter(newView.constrainCenter(oldView.getCenter()));
-    newView.on("change:resolution", ol_res_change_handler);
-    ol_map.setView(newView);
+    newView.on("change:resolution", () => ol_res_change_handler(map));
+    map.setView(newView);
   }
 }
 let ol_source = new ol.source.OSM({
@@ -234,7 +234,6 @@ function ol_initAll() {
         "&hl=de" +
         "&alt=0" +
         "&srv=0"
-
     );
     abutton.setAttribute("target", "_blank");
     button.appendChild(abutton);
@@ -251,9 +250,9 @@ function ol_initAll() {
   ol.inherits(ol_app.RM, ol.control.Control);
 
   const targets = document.querySelectorAll(".ol-map");
-  targets.forEach((el, index) => {
-    let idx = index + 1;
-    ol_map = new ol.Map({
+  targets.forEach((el) => {
+    let id = el.dataset.id;
+    const map = new ol.Map({
       controls: ol.control
         .defaults({ attribution: false })
         .extend([ol_attribution])
@@ -264,22 +263,27 @@ function ol_initAll() {
         mouseWheelZoom: ol_mouseWheelZoom,
       }),
       layers: [ol_tileserver],
-      target: "ol-map-" + idx,
+      target: "ol-map-" + id,
       view: ol_view,
     });
+    maps.set(id, { map });
 
-    ol_map.on("moveend", function () {
-      let zoom = ol_map.getView().getZoom();
+    if ("zoom" in el.dataset) {
+      ol_zoom = ol_zooms + parseInt(el.dataset.zoom);
+    }
+
+    map.on("moveend", function () {
+      let zoom = map.getView().getZoom();
       if (zoom > ol_zooms) {
-        ol_map.getView().setZoom(ol_zooms);
+        map.getView().setZoom(ol_zooms);
       }
     });
-    if (!ol_initView(ol_map)) return;
+    if (!ol_initView(map)) return;
     ol_maxResolution = ol_view.getResolution();
-    ol_res_change_handler();
-    ol_map.getView().setZoom(ol_zoom - ol_minzoom);
+    ol_res_change_handler(map);
+    map.getView().setZoom(ol_zoom - ol_minzoom);
     ol_init_handler();
-    ol_addMarker();
+    ol_addMarker(id);
   });
 }
 
@@ -321,14 +325,11 @@ function ol_initView(map) {
   }
   return true;
 }
-function ol_addMarker(center1) {
+function ol_addMarker(id, center1) {
   let ol_x, ol_y;
+  const map = maps.get(id).map;
   if (!center1 || center1 == null || center1 == undefined) {
-    let center = ol.proj.transform(
-      ol_map.getView().getCenter(),
-      EPSG[1],
-      EPSG[0]
-    );
+    let center = ol.proj.transform(map.getView().getCenter(), EPSG[1], EPSG[0]);
     ol_x = center[0];
     ol_y = center[1];
   } else {
@@ -352,10 +353,11 @@ function ol_addMarker(center1) {
     }),
   });
 
-  ol_map.addLayer(ol_layer);
+  map.addLayer(ol_layer);
 }
 
-function ol_addMarker2(coord_x, coord_y) {
+function ol_addMarker2(id, coord_x, coord_y) {
+  const map = maps.get(id).map;
   let ol_layer2 = new ol.layer.Vector({
     source: new ol.source.Vector({
       features: [
@@ -372,7 +374,7 @@ function ol_addMarker2(coord_x, coord_y) {
     }),
   });
 
-  ol_map.addLayer(ol_layer2);
+  map.addLayer(ol_layer2);
 }
 
 function ol_docReady(fn) {
