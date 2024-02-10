@@ -12,7 +12,6 @@ const ol_script_url = ol_script.src;
 const ol_root = document.location.hostname;
 const ol_deltax = 0.7;
 const ol_deltay = 0.3;
-const ol_attribution = new ol.control.Attribution({ collapsible: false });
 const EPSG = ["EPSG:4326", "EPSG:3857"];
 
 let ol_zoom;
@@ -255,7 +254,7 @@ function ol_initAll() {
     const map = new ol.Map({
       controls: ol.control
         .defaults({ attribution: false })
-        .extend([ol_attribution])
+        .extend([new ol.control.Attribution({ collapsible: false })])
         .extend([new ol_app.IC()])
         .extend([new ol_app.RC()])
         .extend([new ol_app.RM()]),
