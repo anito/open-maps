@@ -58,10 +58,6 @@ class Open_Maps_Admin
     add_action('admin_init', array($this, 'registerAndBuildFields'));
     add_action('option', array($this, 'registerAndBuildFields'));
     add_action('update_option_open_maps_grayscale', array($this, 'open_maps_grayscale_callback'), 10, 2);
-
-    add_filter('pre_update_option_open_maps_min_zoom', array($this, 'pre_update_option_open_maps_min_zoom'), 10, 3);
-    add_filter('pre_update_option_open_maps_max_zoom', array($this, 'pre_update_option_open_maps_max_zoom'), 20, 3);
-    add_filter('pre_update_option_open_maps_ini_zoom', array($this, 'pre_update_option_open_maps_ini_zoom'), 30, 3);
   }
 
   /**
@@ -72,88 +68,6 @@ class Open_Maps_Admin
 
     $dir = plugin_dir_path(__DIR__) . 'tiles';
     Open_Maps_Utils::removeDir($dir);
-  }
-
-  public function pre_update_option_open_maps_min_zoom($new, $old, $option)
-  {
-
-    if (empty($new)) {
-      return $new;
-    }
-    $max = (int) !empty($max_zoom = get_option('open_maps_max_zoom')) ? $max_zoom : DEFAULT_MAX_ZOOM;
-    if ($new >= $max) {
-      $new = $max - 1;
-      $this->check_zoom($new, $max);
-      return $new;
-    }
-    if ($new< DEFAULT_MIN_ZOOM) {
-      $new = DEFAULT_MIN_ZOOM;
-      $this->check_zoom($new, $max);
-      return $new;
-    }
-    if ($new > DEFAULT_MAX_ZOOM - 1) {
-      $new = DEFAULT_MAX_ZOOM - 1;
-      $this->check_zoom($new, $max);
-      return $new;
-    }
-    $this->check_zoom($new, $max);
-    return $new;
-  }
-
-  public function pre_update_option_open_maps_max_zoom($new, $old, $option)
-  {
-
-    if (empty($new)) {
-      return $new;
-    }
-    $min = (int) !empty($min_zoom = get_option('open_maps_min_zoom')) ? $min_zoom : DEFAULT_MIN_ZOOM;
-    if ($new <= $min) {
-      $new = $min + 1;
-      $this->check_zoom($min, $new);
-      return $new;
-    }
-    if ($new < DEFAULT_MIN_ZOOM + 1) {
-      $new = DEFAULT_MIN_ZOOM + 1;
-      $this->check_zoom($min, $new);
-      return $new;
-    }
-    if ($new > DEFAULT_MAX_ZOOM) {
-      $new = DEFAULT_MAX_ZOOM;
-      $this->check_zoom($min, $new);
-      return $new;
-    }
-    $this->check_zoom($min, $new);
-    return $new;
-  }
-
-  public function pre_update_option_open_maps_ini_zoom($new, $old, $option)
-  {
-
-    if (empty($new)) {
-      return DEFAULT_INI_ZOOM;
-    }
-    $min = (int) !empty($min_zoom = get_option('open_maps_min_zoom')) ? $min_zoom : DEFAULT_MIN_ZOOM;
-    $max = (int) !empty($max_zoom = get_option('open_maps_max_zoom')) ? $max_zoom : DEFAULT_MAX_ZOOM;
-    $new = (int) $new;
-    if ($new < $min) {
-      return $min;
-    }
-    if ($new > $max) {
-      return $max;
-    }
-    return $new;
-  }
-  
-  public function check_zoom($min, $max)
-  {
-    
-    $cur = (int) get_option('open_maps_ini_zoom');
-    if ($cur < $min) {
-      update_option('open_maps_ini_zoom', $min);
-    }
-    if ($cur > $max) {
-      update_option('open_maps_ini_zoom', $max);
-    }
   }
 
   /**
@@ -266,32 +180,7 @@ class Open_Maps_Admin
       'open_maps_general_settings' // Page on which to add this section of options
     );
 
-
-
-    // Longitude
-    $args = array(
-      'type'              => 'input',
-      'subtype'           => 'text',
-      'id'                => 'open_maps_longitude',
-      'name'              => 'open_maps_longitude',
-      'required'          => 'required="required"',
-      'get_options_list'  => '',
-      'value_type'        => 'normal',
-      'wp_data'           => 'option'
-    );
-
-    add_settings_field(
-      $args['id'],
-      __('Longitude', 'open-maps'),
-      array($this, 'open_maps_render_settings_field'),
-      'open_maps_general_settings',
-      'open_maps_general_section',
-      $args
-    );
-    $register($args['id']);
-
     // Latitude
-    unset($args);
     $args = array(
       'type'              => 'input',
       'subtype'           => 'text',
@@ -313,20 +202,43 @@ class Open_Maps_Admin
     );
     $register($args['id']);
 
+    // Longitude
+    unset($args);
+    $args = array(
+      'type'              => 'input',
+      'subtype'           => 'text',
+      'id'                => 'open_maps_longitude',
+      'name'              => 'open_maps_longitude',
+      'required'          => 'required="required"',
+      'get_options_list'  => '',
+      'value_type'        => 'normal',
+      'wp_data'           => 'option'
+    );
+
+    add_settings_field(
+      $args['id'],
+      __('Longitude', 'open-maps'),
+      array($this, 'open_maps_render_settings_field'),
+      'open_maps_general_settings',
+      'open_maps_general_section',
+      $args
+    );
+    $register($args['id']);
+
     // Zoomlevel
     unset($args);
     $args = array(
       'type'              => 'input',
       'subtype'           => 'number',
-      'min'               => DEFAULT_MIN_ZOOM,
-      'max'               => DEFAULT_MAX_ZOOM,
+      'min'               => 1,
+      'max'               => DEFAULT_MAX_ZOOM - DEFAULT_MIN_ZOOM,
       'placeholder'       => DEFAULT_INI_ZOOM,
       'id'                => 'open_maps_ini_zoom',
       'name'              => 'open_maps_ini_zoom',
       'get_options_list'  => '',
       'value_type'        => 'normal',
       'wp_data'           => 'option',
-      'label'             => sprintf(__('[%d - %d]', 'open-maps'), DEFAULT_MIN_ZOOM, DEFAULT_MAX_ZOOM),
+      'label'             => sprintf(__('[%d - %d]', 'open-maps'), 1, DEFAULT_MAX_ZOOM - DEFAULT_MIN_ZOOM),
     );
     add_settings_field(
       $args['id'],

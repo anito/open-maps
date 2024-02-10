@@ -38,13 +38,13 @@ function is_valid_ressource($url)
   }
   return false;
 }
-function fetch($url, $dir, $file)
+function fetch($url, $dir, $path)
 {
   global $ua;
   if (!is_dir($dir)) {
     mkdir($dir, 0755, true);
   }
-  $fn = str_ends_with($file, '.png') ? $file : $file . '.png';
+  $fn = str_ends_with($path, '.png') ? $path : $path . '.png';
   $file = fopen($fn, 'wb');
   $ch = curl_init($url);
   curl_setopt($ch, CURLOPT_FILE, $file);
@@ -59,32 +59,19 @@ function fetch($url, $dir, $file)
   curl_close($ch);
   fflush($file);
   fclose($file);
-  $image = imagecreatefrompng($fn);
-  if ($image) {
-    $image = get_image($image, $file);
+
+  // Convert to grayscale image if requested
+  global $filter;
+  if ($filter) {
+    $image = imagecreatefrompng($fn);
+    if(image_filter($image)) {
+      imagepng($image, $fn);
+    }
   }
-  if ($image && image_filter($image)) {
-    imagepng($image, $file);
-    unlink($fn);
-  } else {
-    @rename($fn, $file);
-  }
-  imagedestroy($image);
-}
-function get_image($image, $file)
-{
-  imagejpeg($image, $file . ".jpg");
-  $image = imagecreatefromjpeg($file . ".jpg");
-  unlink($file . ".jpg");
-  return $image;
 }
 function image_filter($image)
 {
-  global $filter;
-  if ($filter) {
-    return imagefilter($image, IMG_FILTER_GRAYSCALE);
-  }
-  return $image;
+  return imagefilter($image, IMG_FILTER_GRAYSCALE);
 }
 function output_file($file)
 {
@@ -94,7 +81,7 @@ function output_file($file)
 function pass_file_data($url)
 {
   global $ua;
-  $context = stream_context_create(
+  $ctx = stream_context_create(
     array(
       'http' => array(
         'method' => 'GET',
@@ -102,14 +89,14 @@ function pass_file_data($url)
       ),
     )
   );
-  $file = @fopen($url, 'rb', false, $context);
+  $file = @fopen($url, 'rb', false, $ctx);
   if (!$file) {
     return;
   }
   handle_header($url);
   fpassthru($file);
 }
-function process_coord($url)
+function fetch_header_data($url)
 {
   global $ua;
   $data = [];
@@ -123,9 +110,9 @@ function process_coord($url)
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   }
-  curl_setopt($ch, CURLOPT_HEADERFUNCTION,    function ($handle, $option) use (&$data) {
-    $data[] = $option;
-    return strlen($option);
+  curl_setopt($ch, CURLOPT_HEADERFUNCTION, function ($handle, $header_data) use (&$data) {
+    $data[] = $header_data;
+    return strlen($header_data);
   });
   curl_exec($ch);
   curl_close($ch);
@@ -138,15 +125,16 @@ function allowed_addresses()
 }
 function handle_header($url)
 {
-  $header = process_coord($url);
+  global $header;
+  $header = fetch_header_data($url);
   send_header($header);
 }
-function set_expiration($file)
+function set_expiration($path)
 {
   global $max_age;
   $header = array(
     'Expires:'        => gmdate('D, d M Y H:i:s', time() + $max_age * 60) . ' GMT',
-    'Last-Modified:'  => gmdate('D, d M Y H:i:s', filemtime($file)) . ' GMT',
+    'Last-Modified:'  => gmdate('D, d M Y H:i:s', filemtime($path)) . ' GMT',
     'Cache-Control:'  => 'public, max-age=' . $max_age * 60,
     'Content-Type:'   => 'image/png'
   );
@@ -154,7 +142,6 @@ function set_expiration($file)
 }
 function send_header(&$header)
 {
-  global $header;
   foreach ($header as $key => $val) {
     if (is_string($key)) {
       header($key . ' ' . $val);
@@ -174,12 +161,12 @@ $res = array(
 $max_age = 1186400;
 $osm_tile_url = parse_osm_url($res[$r]);
 $dir = "../tiles/" . $z . "/" . $x;
-$file = $dir . "/" . $y . ".png";
+$filename = $dir . "/" . $y . ".png";
 if ($z >= 21) {
   pass_file_data($osm_tile_url);
   exit;
 }
-if (!is_file($file) || (get_file_mod_time($file) && is_valid_ressource($osm_tile_url))) {
-  fetch($osm_tile_url, $dir, $file);
+if (!is_file($filename) || (get_file_mod_time($filename) && is_valid_ressource($osm_tile_url))) {
+  fetch($osm_tile_url, $dir, $filename);
 }
-output_file($file);
+output_file($filename);

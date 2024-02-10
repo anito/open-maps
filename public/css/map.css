@@ -299,6 +299,13 @@
 .ol-touch .ol-route-btn {
   top: 10px;
 }
+.ol-routeplanner-btn {
+  top: 40px;
+  left: 2.7em;
+}
+.ol-touch .ol-routeplanner-btn {
+  top: 40px;
+}
 .ol-btn {
   width: 100%;
   font-size: 12px !important;

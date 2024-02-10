@@ -1,11 +1,10 @@
-const { latitude, longitude, ini_zoom, min_zoom, max_zoom, filter } =
+const { latitude, longitude, ini_zoom, min_zoom, max_zoom, span_zoom, filter } =
   OpenStreetParams;
 
-console.log(OpenStreetParams);
-
-const ol_zoom = parseInt(ini_zoom);
 const ol_minzoom = parseInt(min_zoom); // 9
 const ol_maxzoom = parseInt(max_zoom); // 18
+const ol_zooms = ol_maxzoom - ol_minzoom;
+const ol_zoom = ol_zooms + parseInt(ini_zoom);
 const ol_lat = parseFloat(latitude);
 const ol_lon = parseFloat(longitude);
 const ol_script = document.currentScript;
@@ -13,7 +12,6 @@ const ol_script_url = ol_script.src;
 const ol_root = document.location.hostname;
 const ol_deltax = 0.7;
 const ol_deltay = 0.3;
-const ol_zooms = ol_maxzoom - ol_minzoom;
 const ol_attribution = new ol.control.Attribution({ collapsible: false });
 const EPSG = ["EPSG:4326", "EPSG:3857"];
 
@@ -40,10 +38,6 @@ let ol_view;
 let ol_extent;
 let ol_maxResolution;
 let ol_resolution = 0;
-let ol_center = null;
-let ol_layer = null;
-let ol_x;
-let ol_y;
 
 function ol_res_change_handler(e) {
   let oldView = ol_map.getView();
@@ -141,7 +135,7 @@ ol_source.on("tileloaderror", function () {
 function ol_initAll() {
   ol_view = new ol.View({
     center: ol.proj.transform([ol_lon, ol_lat], EPSG[0], EPSG[1]),
-    zoom: 100,
+    zoom: ini_zoom,
     minZoom: ol_minzoom,
     maxZoom: ol_maxzoom,
   });
@@ -155,7 +149,7 @@ function ol_initAll() {
       ol_mouseWheelZoom = false;
     }
   }
-  ol_center = ol_view.getCenter();
+  const ol_center = ol_view.getCenter();
   window.app = {};
   const ol_app = window.app;
 
@@ -184,10 +178,11 @@ function ol_initAll() {
     });
   };
   ol.inherits(ol_app.IC, ol.control.Control);
+
   ol_app.RC = function (e = {}) {
-    let button = document.createElement("button");
+    const button = document.createElement("button");
     button.className = "ol-btn";
-    let abutton = document.createElement("a");
+    const abutton = document.createElement("a");
     abutton.setAttribute("style", "color:#fff !important");
     abutton.innerHTML = "Vollbild";
 
@@ -208,7 +203,7 @@ function ol_initAll() {
     abutton.setAttribute("target", "_blank");
     button.appendChild(abutton);
 
-    let element = document.createElement("div");
+    const element = document.createElement("div");
     element.className = "ol-route-btn ol-unselectable ol-control";
     element.appendChild(button);
 
@@ -219,6 +214,42 @@ function ol_initAll() {
   };
   ol.inherits(ol_app.RC, ol.control.Control);
 
+  ol_app.RM = function (e = {}) {
+    const button = document.createElement("button");
+    button.className = "ol-btn";
+    const abutton = document.createElement("a");
+    abutton.setAttribute("style", "color:#fff !important");
+    abutton.innerHTML = "Routenplaner";
+
+    abutton.setAttribute(
+      "href",
+      "https://map.project-osrm.org/?z=14&center=" +
+        ol_lat +
+        "," +
+        ol_lon +
+        "&loc=" +
+        ol_lat +
+        "," +
+        ol_lon +
+        "&hl=de" +
+        "&alt=0" +
+        "&srv=0"
+
+    );
+    abutton.setAttribute("target", "_blank");
+    button.appendChild(abutton);
+
+    const element = document.createElement("div");
+    element.className = "ol-routeplanner-btn ol-unselectable ol-control";
+    element.appendChild(button);
+
+    ol.control.Control.call(this, {
+      element,
+      target: e?.target,
+    });
+  };
+  ol.inherits(ol_app.RM, ol.control.Control);
+
   const targets = document.querySelectorAll(".ol-map");
   targets.forEach((el, index) => {
     let idx = index + 1;
@@ -227,7 +258,8 @@ function ol_initAll() {
         .defaults({ attribution: false })
         .extend([ol_attribution])
         .extend([new ol_app.IC()])
-        .extend([new ol_app.RC()]),
+        .extend([new ol_app.RC()])
+        .extend([new ol_app.RM()]),
       interactions: ol.interaction.defaults({
         mouseWheelZoom: ol_mouseWheelZoom,
       }),
@@ -245,7 +277,7 @@ function ol_initAll() {
     if (!ol_initView(ol_map)) return;
     ol_maxResolution = ol_view.getResolution();
     ol_res_change_handler();
-    ol_map.getView().setZoom((ol_zoom - ol_minzoom) || 1);
+    ol_map.getView().setZoom(ol_zoom - ol_minzoom);
     ol_init_handler();
     ol_addMarker();
   });
@@ -290,6 +322,7 @@ function ol_initView(map) {
   return true;
 }
 function ol_addMarker(center1) {
+  let ol_x, ol_y;
   if (!center1 || center1 == null || center1 == undefined) {
     let center = ol.proj.transform(
       ol_map.getView().getCenter(),
@@ -303,7 +336,7 @@ function ol_addMarker(center1) {
     ol_x = center[0];
     ol_y = center[1];
   }
-  ol_layer = new ol.layer.Vector({
+  const ol_layer = new ol.layer.Vector({
     source: new ol.source.Vector({
       features: [
         new ol.Feature({

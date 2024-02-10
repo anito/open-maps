@@ -36,8 +36,8 @@ if ( ! defined( 'WPINC' ) ) {
  * Rename this for your plugin and update it as you release new versions.
  */
 define( 'OPEN_MAPS_VERSION', '1.0.6' );
-define( 'DEFAULT_INI_ZOOM', 9 );
-define( 'DEFAULT_MIN_ZOOM', 1 );
+define( 'DEFAULT_INI_ZOOM', 1 );
+define( 'DEFAULT_MIN_ZOOM', 9 );
 define( 'DEFAULT_MAX_ZOOM', 18 );
 
 /**
