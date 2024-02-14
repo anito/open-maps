@@ -8,17 +8,14 @@
  * registers the activation and deactivation functions, and defines a function
  * that starts the plugin.
  *
- * @link              https://www.wplauncher.com
  * @since             1.0.0
  * @package           Open_Maps
  *
  * @wordpress-plugin
  * Plugin Name:       Open Street Map
- * Plugin URI:        https://www.wplauncher.com
- * Description:       Interactive Map Substitude for Google Maps
+ * Description:       Interactive Map Substitude for Google Maps based on Dr.DSGVOs' (https://dr-dsgvo.de/) solution
  * Version:           1.1.4
  * Author:            Axel Nitzschner
- * Author URI:        https://www.webpremiere.de
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       open-maps
@@ -30,11 +27,6 @@ if (!defined('WPINC')) {
 	die;
 }
 
-/**
- * Currently plugin version.
- * Start at version 1.0.0 and use SemVer - https://semver.org
- * Rename this for your plugin and update it as you release new versions.
- */
 define('DEFAULT_INI_ZOOM', 1);
 define('DEFAULT_MIN_ZOOM', 1);
 define('DEFAULT_MAX_ZOOM', 19);
