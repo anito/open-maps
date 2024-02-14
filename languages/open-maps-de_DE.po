@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Open Street Map\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-05 19:54+0000\n"
-"PO-Revision-Date: 2024-02-07 17:00+0000\n"
+"PO-Revision-Date: 2024-02-14 04:14+0000\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch\n"
 "Language: de_DE\n"
@@ -15,40 +15,64 @@ msgstr ""
 "X-Loco-Version: 2.6.6; wp-6.4.3\n"
 "X-Domain: open-maps"
 
+#: admin/class-open-maps-admin.php:269
+msgid "[%d - %d]"
+msgstr "[%d - %d]"
+
 #. Author of the plugin
 msgid "Axel Nitzschner"
-msgstr ""
+msgstr "Axel Nitzschner"
+
+#: admin/class-open-maps-admin.php:248
+msgid "Coordinates and label"
+msgstr "Koordinaten und Label"
+
+#: admin/class-open-maps-admin.php:273
+msgid "Default zoomlevel"
+msgstr "Standard Zoom-Faktor"
+
+#: includes/class-open-maps-templates.php:38
+msgid "Error:"
+msgstr "Fehler:"
+
+#: admin/class-open-maps-admin.php:448
+msgid "Example:"
+msgstr "Beispiel:"
 
 #. ID used to identify this section and with which to register options
-#: admin/class-open-maps-admin.php:178
+#: admin/class-open-maps-admin.php:229
 msgid "General settings"
 msgstr "Allgemeine Einstellungen"
 
-#: admin/class-open-maps-admin.php:276
+#: admin/class-open-maps-admin.php:334
 msgid "Geographical coordinates and view settings"
 msgstr "Geografische Koordinaten und Darstellung"
 
-#: admin/class-open-maps-admin.php:265
+#: admin/class-open-maps-admin.php:294
 msgid "Grayscale"
 msgstr "Monochrome Karte"
 
 #. Author URI of the plugin
 msgid "https://www.webpremiere.de"
-msgstr ""
+msgstr "https://www.webpremiere.de"
 
 #. URI of the plugin
 msgid "https://www.wplauncher.com"
-msgstr ""
+msgstr "https://www.wplauncher.com"
 
 #. Description of the plugin
 msgid "Interactive Map Substitude for Google Maps"
 msgstr "Interaktive Karte als Ersatz für Google Maps"
 
-#: admin/class-open-maps-admin.php:222
+#: admin/class-open-maps-admin.php:241 admin/class-open-maps-admin.php:372
+msgid "Label"
+msgstr "Label"
+
+#: admin/class-open-maps-admin.php:241 admin/class-open-maps-admin.php:372
 msgid "Latitude"
 msgstr "Breitengrad"
 
-#: admin/class-open-maps-admin.php:199
+#: admin/class-open-maps-admin.php:241 admin/class-open-maps-admin.php:372
 msgid "Longitude"
 msgstr "Längengrad"
 
@@ -56,14 +80,46 @@ msgstr "Längengrad"
 msgid "Open Street Map"
 msgstr "Open Street Map"
 
-#: admin/class-open-maps-admin.php:122
+#: admin/class-open-maps-admin.php:168
 msgid "Open Street Maps"
 msgstr "Open Street Map"
+
+#. ID used to identify this section and with which to register options
+#: admin/class-open-maps-admin.php:304
+msgid "Preview"
+msgstr "Vorschau"
 
 #: admin/partials/open-maps-admin-settings-display.php:18
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: admin/class-open-maps-admin.php:244
-msgid "Zoomlevel"
-msgstr "Zoom-Faktor"
+#: admin/class-open-maps-admin.php:323
+msgid "Shortcode"
+msgstr "Shortcode"
+
+#: includes/class-open-maps-templates.php:38
+msgid "Template not found"
+msgstr "Vorlage nicht gefunden"
+
+#: admin/class-open-maps-admin.php:442
+msgid "Usage:"
+msgstr "Verwendung:"
+
+#: admin/class-open-maps-admin.php:444
+msgid ""
+"use an \"id\" parameter in order to differentiate multiple maps on the same "
+"page"
+msgstr ""
+"verwende einen \"id\" Parameter um mehrere Karten auf einer Seite eindeutig "
+"zuzuordnen"
+
+#: admin/class-open-maps-admin.php:445
+msgid "use the \"zoom\" parameter in order to override default zoom"
+msgstr ""
+"mit einem \"zoom\" Parameter ist es möglich den Standard-Zoom zu "
+"überschreiben"
+
+#: admin/class-open-maps-admin.php:340
+msgid "Use the shortcode field below to preview your map"
+msgstr ""
+"Verwende das folgende Eingabefeld um eine Vorschau der Karte anzuzeigen"

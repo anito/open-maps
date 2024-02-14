@@ -2,3 +2,41 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+.open-maps-coords-group {
+  margin: 10px 0;
+}
+.open-maps-coords-groups .open-maps-coords-group:last-child .action-add {
+  display: inline-block;
+}
+.open-maps-coords-groups .open-maps-coords-group:first-child .action-remove,
+.open-maps-coords-groups .open-maps-coords-group .action-add,
+.open-maps-coords-group.template {
+  display: none;
+}
+
+/** Preview **/
+.open-maps-preview {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 600px;
+  padding: 8px;
+  background-color: rgb(0 0 0 / 10%);
+}
+.open-maps-field-description {
+  font-style: italic;
+  font-size: .8em;
+  margin: 10px 0;
+  
+}
+.open-maps-field-description ul,
+.open-maps-field-description ul li {
+  list-style-type: none;
+  margin: 0;
+}
+.code {
+  background: #ddd;
+  border-radius: 4px;
+  display: inline-block;
+  padding: 3px 5px;
+}

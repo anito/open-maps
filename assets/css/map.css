@@ -94,6 +94,10 @@
     display: none;
   }
 }
+.ol-control button, .ol-control img {
+  height: 1.375em;
+  width: 1.375em;
+}
 .ol-control button {
   display: block;
   margin: 1px;
@@ -103,8 +107,6 @@
   font-weight: 700;
   text-decoration: none;
   text-align: center;
-  height: 1.375em;
-  width: 1.375em;
   line-height: 0.4em;
   background-color: rgba(0, 60, 136, 0.5);
   border: none;
@@ -279,14 +281,11 @@
 }
 .ol-init-btn img {
   cursor: pointer;
-  width: 20px;
   margin: 0 auto;
 }
 .ol-init-btn {
   top: 72px;
   left: 0.55em;
-  width: 30px;
-  height: 30px;
   display: inline-flex;
 }
 .ol-touch .ol-init-btn {

@@ -20,7 +20,7 @@
  * @subpackage Open_Maps/public
  * @author     Ben Shadle <benshadle@gmail.com>
  */
-class Open_Maps_Public
+class Open_Maps_Public extends Open_Maps_Templates
 {
 
   /**
@@ -30,7 +30,7 @@ class Open_Maps_Public
    * @access   private
    * @var      string    $plugin_name    The ID of this plugin.
    */
-  private $plugin_name;
+  private static $plugin_name;
 
   /**
    * The version of this plugin.
@@ -39,7 +39,7 @@ class Open_Maps_Public
    * @access   private
    * @var      string    $version    The current version of this plugin.
    */
-  private $version;
+  private static $version;
 
   /**
    * Initialize the class and set its properties.
@@ -48,10 +48,8 @@ class Open_Maps_Public
    * @param      string    $plugin_name       The name of the plugin.
    * @param      string    $version    The version of this plugin.
    */
-  public function __construct($plugin_name, $version)
+  public function __construct()
   {
-    $this->plugin_name = $plugin_name;
-    $this->version = $version;
   }
 
   /**
@@ -74,7 +72,7 @@ class Open_Maps_Public
      * class.
      */
 
-    wp_enqueue_style($this->plugin_name . '-map', plugin_dir_url(__FILE__) . 'css/map.css', array(), $this->version, 'all');
+    wp_enqueue_style(self::$plugin_name . '-map', plugin_dir_url(__DIR__) . 'assets/css/map.css', array(), self::$version, 'all');
   }
 
   /**
@@ -96,25 +94,23 @@ class Open_Maps_Public
      * class.
      */
 
-    $longitude         = get_option('open_maps_longitude', 52.522098876428394);
-    $latitude          = get_option('open_maps_latitude', 13.41332745563617);
+    $coords            = get_option('open_maps_coords');
     $ini_zoom          = (int) !empty($ini_zoom = get_option('open_maps_ini_zoom')) ? $ini_zoom : DEFAULT_INI_ZOOM;
     $min_zoom          = DEFAULT_MIN_ZOOM;
     $max_zoom          = DEFAULT_MAX_ZOOM;
     $filter            = get_option('open_maps_grayscale');
 
-    wp_enqueue_script($this->plugin_name . '-open-maps', plugin_dir_url(__FILE__) . 'js/map.js', array(), $this->version, true);
-    wp_enqueue_script($this->plugin_name . '-open-maps-main', plugin_dir_url(__FILE__) . 'js/m.js', array(), $this->version, true);
-    wp_localize_script($this->plugin_name . '-open-maps-main', 'OpenStreetParams', array(
-      'longitude' => $longitude,
-      'latitude'  => $latitude,
+    wp_enqueue_script(self::$plugin_name . '-open-maps', plugin_dir_url(__DIR__) . 'assets/js/map.js', array(), self::$version, true);
+    wp_enqueue_script(self::$plugin_name . '-open-maps-main', plugin_dir_url(__DIR__) . 'assets/js/m.js', array(), self::$version, true);
+    wp_localize_script(self::$plugin_name . '-open-maps-main', 'OpenStreetParams', array(
+      'coords'    => $coords,
       'ini_zoom'  => $ini_zoom,
       'min_zoom'  => $min_zoom,
       'max_zoom'  => $max_zoom,
       'filter'    => $filter,
     ));
     
-    wp_enqueue_script($this->plugin_name . '-open-maps-public', plugin_dir_url(__FILE__) . 'js/open-maps-public.js', array('jquery'), $this->version, true);
+    wp_enqueue_script(self::$plugin_name . '-open-maps-public', plugin_dir_url(__FILE__) . 'js/open-maps-public.js', array('jquery'), self::$version, true);
 
   }
 

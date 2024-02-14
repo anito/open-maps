@@ -16,7 +16,7 @@
  * Plugin Name:       Open Street Map
  * Plugin URI:        https://www.wplauncher.com
  * Description:       Interactive Map Substitude for Google Maps
- * Version:           1.0.7
+ * Version:           1.1.0
  * Author:            Axel Nitzschner
  * Author URI:        https://www.webpremiere.de
  * License:           GPL-2.0+
@@ -26,7 +26,7 @@
  */
 
 // If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
+if (!defined('WPINC')) {
 	die;
 }
 
@@ -35,17 +35,18 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'OPEN_MAPS_VERSION', '1.0.7' );
-define( 'DEFAULT_INI_ZOOM', 1 );
-define( 'DEFAULT_MIN_ZOOM', 9 );
-define( 'DEFAULT_MAX_ZOOM', 18 );
+define('DEFAULT_INI_ZOOM', 1);
+define('DEFAULT_MIN_ZOOM', 9);
+define('DEFAULT_MAX_ZOOM', 18);
+define('IAK_PLACEHOLDER', '[iak]');
 
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-open-maps-activator.php
  */
-function activate_open_maps() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-open-maps-activator.php';
+function activate_open_maps()
+{
+	require_once plugin_dir_path(__FILE__) . 'includes/class-open-maps-activator.php';
 	Open_Maps_Activator::activate();
 }
 
@@ -53,19 +54,21 @@ function activate_open_maps() {
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-open-maps-deactivator.php
  */
-function deactivate_open_maps() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-open-maps-deactivator.php';
+function deactivate_open_maps()
+{
+	require_once plugin_dir_path(__FILE__) . 'includes/class-open-maps-deactivator.php';
 	Open_Maps_Deactivator::deactivate();
 }
 
-register_activation_hook( __FILE__, 'activate_open_maps' );
-register_deactivation_hook( __FILE__, 'deactivate_open_maps' );
+register_activation_hook(__FILE__, 'activate_open_maps');
+register_deactivation_hook(__FILE__, 'deactivate_open_maps');
 
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-open-maps.php';
+require plugin_dir_path(__FILE__) . 'includes/class-open-maps-templates.php';
+require plugin_dir_path(__FILE__) . 'includes/class-open-maps.php';
 
 /**
  * Begins execution of the plugin.
@@ -76,10 +79,10 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-open-maps.php';
  *
  * @since    1.0.0
  */
-function run_open_maps() {
+function run_open_maps()
+{
 
-	$plugin = new Open_Maps();
+	$plugin = Open_Maps::get_instance(__FILE__);
 	$plugin->run();
-
 }
 run_open_maps();
