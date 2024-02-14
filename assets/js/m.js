@@ -116,14 +116,6 @@
     map.addLayer(layer);
   }
 
-  function ol_getPath() {
-    const url = document.currentScript.src;
-    const regex = /\/(.*)\//;
-    const pathname = new URL(url).pathname;
-    const matches = pathname.match(regex);
-    return matches.length && matches[0];
-  }
-
   function ol_initAll() {
     ol_initView();
 
