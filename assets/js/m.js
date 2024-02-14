@@ -1,4 +1,4 @@
-const { coords, ini_zoom, min_zoom, max_zoom, filter } = OpenStreetParams;
+const { coords, min_zoom, max_zoom, filter } = OpenStreetParams;
 
 const maps = new Map();
 const ol_minzoom = parseInt(min_zoom); // 9
@@ -312,7 +312,7 @@ function ol_initAll() {
     maps.set(id, { map });
 
     if ("zoom" in el.dataset) {
-      ol_zoom = parseInt(el.dataset.zoom);
+      ol_zoom = parseFloat(el.dataset.zoom);
     }
 
     map.on("moveend", function () {
