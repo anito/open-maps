@@ -37,6 +37,15 @@
   padding-left: 24px;
   text-indent: -17px;
 }
+.action-button {
+  min-width: 45px;
+  text-align: center;
+  font-weight: 700;
+}
+.action-button > .dashicons {
+  font-size: 1.3em;
+  vertical-align: middle
+}
 .code {
   background: #ddd;
   border-radius: 4px;
