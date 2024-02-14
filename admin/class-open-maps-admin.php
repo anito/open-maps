@@ -286,7 +286,7 @@ class Open_Maps_Admin extends Open_Maps
     unset($args);
     $args = array(
       'type'              => 'input',
-      'subtype'           => 'text',
+      'subtype'           => array('text', 'size' => 20),
       'id'                => 'open_maps_shortcode',
       'name'              => 'open_maps_shortcode',
       'placeholder'       => htmlspecialchars(IAK_PLACEHOLDER),
