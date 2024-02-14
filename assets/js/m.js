@@ -44,27 +44,6 @@ let off = 1;
 let ol_center;
 let ol_extent;
 
-function createFeatures() {
-  return coords.map((coord) => {
-    const { lat, lon, lab: name } = coord;
-    return new ol.Feature({
-      geometry: new ol.geom.Point(ol.proj.fromLonLat([lon, lat])),
-      name,
-    });
-  });
-}
-
-function ol_getOrdered() {
-  const lats = coords
-    .map((coord) => parseFloat(coord.lat))
-    .sort((a, b) => (parseFloat(a) > parseFloat(b) ? 1 : -1));
-  const lons = coords
-    .map((coord) => parseFloat(coord.lon))
-    .sort((a, b) => (parseFloat(a) > parseFloat(b) ? 1 : -1));
-
-  return [lons[0], lats[0], lons[lons.length - 1], lats[lats.length - 1]];
-}
-
 const ol_source = new ol.source.OSM({
   crossOrigin: null,
   url: `${ol_path.replace(
