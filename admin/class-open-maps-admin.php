@@ -233,7 +233,7 @@ class Open_Maps_Admin extends Open_Maps
     unset($args);
     $args = array(
       'type'              => 'input',
-      'subtype'           => array('number', 'size' => 3),
+      'subtype'           => array('number', 'size' => 5),
       'min'               => DEFAULT_MIN_ZOOM,
       'max'               => DEFAULT_MAX_ZOOM,
       'placeholder'       => DEFAULT_INI_ZOOM,
