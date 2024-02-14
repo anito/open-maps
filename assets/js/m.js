@@ -193,22 +193,24 @@ function ol_initAll() {
   ol.inherits(ol_app.IC, ol.control.Control);
 
   ol_app.RC = function (e = {}) {
-    var button = document.createElement("button");
+    const button = document.createElement("button");
     button.className = "ol-btn";
-    var abutton = document.createElement("a");
+    const abutton = document.createElement("a");
     abutton.setAttribute("style", "color:#fff !important");
     abutton.innerHTML = "Vollbild";
-    var center11 = ol.proj.transform(ol_center, EPSG[0], EPSG[1]);
-    var zoomx = 8;
 
     abutton.setAttribute(
       "href",
-      "https://www.openstreetmap.org/#map=" +
-        zoomx +
+      "https://www.openstreetmap.org/?mlat=" +
+        ol_lat +
+        "&mlon=" +
+        ol_lon +
+        "#map=" +
+        14 +
         "/" +
-        center11[1] +
+        ol_lat +
         "/" +
-        center11[0] +
+        ol_lon +
         "&layers=N"
     );
     abutton.setAttribute("target", "_blank");
@@ -219,7 +221,7 @@ function ol_initAll() {
     element.appendChild(button);
 
     ol.control.Control.call(this, {
-      element: element,
+      element,
       target: e?.target,
     });
   };
