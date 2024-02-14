@@ -102,7 +102,7 @@ function ol_initView() {
 function ol_addMarker(map) {
   const layer = new ol.layer.Vector({
     source: new ol.source.Vector({
-      features: ol_featchers,
+      features: ol_features,
     }),
     style: new ol.style.Style({
       image: new ol.style.Icon({
@@ -298,7 +298,7 @@ function ol_initAll() {
         ol_tileserver,
         new ol.layer.Vector({
           source: new ol.source.Vector({
-            features: ol_featchers,
+            features: ol_features,
           }),
           style: function (feature) {
             labelStyle.getText().setText(feature.get("name"));
