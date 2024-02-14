@@ -1,10 +1,4 @@
-const {
-  coords,
-  ini_zoom,
-  min_zoom,
-  max_zoom,
-  filter,
-} = OpenStreetParams;
+const { coords, ini_zoom, min_zoom, max_zoom, filter } = OpenStreetParams;
 
 const maps = new Map();
 const features = createFeatures();
@@ -142,7 +136,6 @@ function getPath() {
 }
 
 function ol_initAll() {
-
   ol_initView();
 
   const off_y = ol_ordered[3] - ol_ordered[1];
@@ -159,10 +152,6 @@ function ol_initAll() {
   } else {
     ol_deltay = 1.9;
   }
-  const ol_view = new ol.View({
-    minZoom: ol_minzoom,
-    maxZoom: ol_maxzoom,
-  });
 
   let ol_mouseWheelZoom = true;
   if (window && window.screen) {
@@ -299,7 +288,11 @@ function ol_initAll() {
   const targets = document.querySelectorAll(".ol-map");
   targets.forEach((el) => {
     const id = el.dataset.id;
-    const target = "ol-map-" + id;
+
+    const ol_view = new ol.View({
+      minZoom: ol_minzoom,
+      maxZoom: ol_maxzoom,
+    });
 
     const map = new ol.Map({
       controls: ol.control
@@ -323,14 +316,16 @@ function ol_initAll() {
           },
         }),
       ],
-      target,
+      target: "ol-map-" + id,
       view: ol_view,
     });
     maps.set(id, { map });
 
     if ("zoom" in el.dataset) {
-      ol_zoom = ol_zooms + parseInt(el.dataset.zoom);
+      ol_zoom = parseInt(el.dataset.zoom);
     }
+
+    console.log(id, ol_zoom);
 
     map.on("moveend", function () {
       const zoom = map.getView().getZoom();

@@ -95,10 +95,10 @@ class Open_Maps_Public extends Open_Maps_Templates
      */
 
     $coords            = get_option('open_maps_coords');
+    $filter            = get_option('open_maps_grayscale');
     $ini_zoom          = (int) !empty($ini_zoom = get_option('open_maps_ini_zoom')) ? $ini_zoom : DEFAULT_INI_ZOOM;
     $min_zoom          = DEFAULT_MIN_ZOOM;
     $max_zoom          = DEFAULT_MAX_ZOOM;
-    $filter            = get_option('open_maps_grayscale');
 
     wp_enqueue_script(self::$plugin_name . '-open-maps', plugin_dir_url(__DIR__) . 'assets/js/map.js', array(), self::$version, true);
     wp_enqueue_script(self::$plugin_name . '-open-maps-main', plugin_dir_url(__DIR__) . 'assets/js/m.js', array(), self::$version, true);

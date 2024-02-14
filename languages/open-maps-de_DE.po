@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Open Street Map\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-05 19:54+0000\n"
-"PO-Revision-Date: 2024-02-14 04:14+0000\n"
+"PO-Revision-Date: 2024-02-14 07:45+0000\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch\n"
 "Language: de_DE\n"
@@ -15,7 +15,7 @@ msgstr ""
 "X-Loco-Version: 2.6.6; wp-6.4.3\n"
 "X-Domain: open-maps"
 
-#: admin/class-open-maps-admin.php:269
+#: admin/class-open-maps-admin.php:245
 msgid "[%d - %d]"
 msgstr "[%d - %d]"
 
@@ -23,11 +23,11 @@ msgstr "[%d - %d]"
 msgid "Axel Nitzschner"
 msgstr "Axel Nitzschner"
 
-#: admin/class-open-maps-admin.php:248
+#: admin/class-open-maps-admin.php:224
 msgid "Coordinates and label"
 msgstr "Koordinaten und Label"
 
-#: admin/class-open-maps-admin.php:273
+#: admin/class-open-maps-admin.php:249
 msgid "Default zoomlevel"
 msgstr "Standard Zoom-Faktor"
 
@@ -35,20 +35,20 @@ msgstr "Standard Zoom-Faktor"
 msgid "Error:"
 msgstr "Fehler:"
 
-#: admin/class-open-maps-admin.php:448
+#: admin/class-open-maps-admin.php:428
 msgid "Example:"
 msgstr "Beispiel:"
 
 #. ID used to identify this section and with which to register options
-#: admin/class-open-maps-admin.php:229
+#: admin/class-open-maps-admin.php:205
 msgid "General settings"
 msgstr "Allgemeine Einstellungen"
 
-#: admin/class-open-maps-admin.php:334
+#: admin/class-open-maps-admin.php:310
 msgid "Geographical coordinates and view settings"
 msgstr "Geografische Koordinaten und Darstellung"
 
-#: admin/class-open-maps-admin.php:294
+#: admin/class-open-maps-admin.php:270
 msgid "Grayscale"
 msgstr "Monochrome Karte"
 
@@ -64,15 +64,15 @@ msgstr "https://www.wplauncher.com"
 msgid "Interactive Map Substitude for Google Maps"
 msgstr "Interaktive Karte als Ersatz für Google Maps"
 
-#: admin/class-open-maps-admin.php:241 admin/class-open-maps-admin.php:372
+#: admin/class-open-maps-admin.php:217 admin/class-open-maps-admin.php:352
 msgid "Label"
 msgstr "Label"
 
-#: admin/class-open-maps-admin.php:241 admin/class-open-maps-admin.php:372
+#: admin/class-open-maps-admin.php:217 admin/class-open-maps-admin.php:352
 msgid "Latitude"
 msgstr "Breitengrad"
 
-#: admin/class-open-maps-admin.php:241 admin/class-open-maps-admin.php:372
+#: admin/class-open-maps-admin.php:217 admin/class-open-maps-admin.php:352
 msgid "Longitude"
 msgstr "Längengrad"
 
@@ -80,12 +80,12 @@ msgstr "Längengrad"
 msgid "Open Street Map"
 msgstr "Open Street Map"
 
-#: admin/class-open-maps-admin.php:168
+#: admin/class-open-maps-admin.php:144
 msgid "Open Street Maps"
 msgstr "Open Street Map"
 
 #. ID used to identify this section and with which to register options
-#: admin/class-open-maps-admin.php:304
+#: admin/class-open-maps-admin.php:280
 msgid "Preview"
 msgstr "Vorschau"
 
@@ -93,7 +93,7 @@ msgstr "Vorschau"
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: admin/class-open-maps-admin.php:323
+#: admin/class-open-maps-admin.php:299
 msgid "Shortcode"
 msgstr "Shortcode"
 
@@ -101,11 +101,11 @@ msgstr "Shortcode"
 msgid "Template not found"
 msgstr "Vorlage nicht gefunden"
 
-#: admin/class-open-maps-admin.php:442
-msgid "Usage:"
-msgstr "Verwendung:"
+#: admin/class-open-maps-admin.php:422
+msgid "Usage with parameters:"
+msgstr "Verwendung von Parametern:"
 
-#: admin/class-open-maps-admin.php:444
+#: admin/class-open-maps-admin.php:425
 msgid ""
 "use an \"id\" parameter in order to differentiate multiple maps on the same "
 "page"
@@ -113,13 +113,13 @@ msgstr ""
 "verwende einen \"id\" Parameter um mehrere Karten auf einer Seite eindeutig "
 "zuzuordnen"
 
-#: admin/class-open-maps-admin.php:445
+#: admin/class-open-maps-admin.php:424
 msgid "use the \"zoom\" parameter in order to override default zoom"
 msgstr ""
 "mit einem \"zoom\" Parameter ist es möglich den Standard-Zoom zu "
 "überschreiben"
 
-#: admin/class-open-maps-admin.php:340
-msgid "Use the shortcode field below to preview your map"
+#: admin/class-open-maps-admin.php:316
+msgid "Use the shortcode field below to generate a preview from your shortcode"
 msgstr ""
-"Verwende das folgende Eingabefeld um eine Vorschau der Karte anzuzeigen"
+"Verwende das Shortcode-Eingabefeld um eine Vorschau deiner Karte anzuzeigen"

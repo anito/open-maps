@@ -36,8 +36,7 @@ class Open_Maps_Admin extends Open_Maps
     add_action('admin_footer', array($this, 'add_admin_footer_template'));
     add_action('admin_init', array($this, 'registerAndBuildFields'));
     add_action('option', array($this, 'registerAndBuildFields'));
-    add_action('update_option_open_maps_grayscale', array($this, 'open_maps_grayscale_callback'), 10, 2);
-    add_filter('add_option_open_maps_coords', array($this, 'open_maps_coords_callback'), 10, 2);
+    add_action('update_option_open_maps_grayscale', array($this, 'open_maps_grayscale_callback'), 10, 0);
     add_filter('option_open_maps_coords', array($this, 'open_maps_coords_callback'));
     add_filter('open-maps/template-path', array($this, 'template_path'));
   }
@@ -69,7 +68,7 @@ class Open_Maps_Admin extends Open_Maps
   /**
    * Remove tiles directory including its content in order to fetch fresh map tiles
    */
-  public function open_maps_grayscale_callback($old, $new)
+  public function open_maps_grayscale_callback()
   {
 
     $dir = plugin_dir_path(__DIR__) . 'tiles';
@@ -121,10 +120,10 @@ class Open_Maps_Admin extends Open_Maps
      */
 
     $coords            = get_option('open_maps_coords');
+    $filter            = get_option('open_maps_grayscale');
     $ini_zoom          = (int) !empty($ini_zoom = get_option('open_maps_ini_zoom')) ? $ini_zoom : DEFAULT_INI_ZOOM;
     $min_zoom          = DEFAULT_MIN_ZOOM;
     $max_zoom          = DEFAULT_MAX_ZOOM;
-    $filter            = get_option('open_maps_grayscale');
 
     wp_enqueue_script(self::$plugin_name . '-open-maps', plugin_dir_url(__DIR__) . 'assets/js/map.js', array(), self::$version, true);
     wp_enqueue_script(self::$plugin_name . '-open-maps-main', plugin_dir_url(__DIR__) . 'assets/js/m.js', array(), self::$version, true);
@@ -235,15 +234,15 @@ class Open_Maps_Admin extends Open_Maps
     $args = array(
       'type'              => 'input',
       'subtype'           => 'number',
-      'min'               => 1,
-      'max'               => DEFAULT_MAX_ZOOM - DEFAULT_MIN_ZOOM,
+      'min'               => DEFAULT_MIN_ZOOM,
+      'max'               => DEFAULT_MAX_ZOOM,
       'placeholder'       => DEFAULT_INI_ZOOM,
       'id'                => 'open_maps_ini_zoom',
       'name'              => 'open_maps_ini_zoom',
       'get_options_list'  => '',
       'value_type'        => 'normal',
       'wp_data'           => 'option',
-      'label'             => sprintf(__('[%d - %d]', 'open-maps'), 1, DEFAULT_MAX_ZOOM - DEFAULT_MIN_ZOOM),
+      'label'             => sprintf(__('[%d - %d]', 'open-maps'), DEFAULT_MIN_ZOOM, DEFAULT_MAX_ZOOM),
     );
     add_settings_field(
       $args['id'],
@@ -314,7 +313,7 @@ class Open_Maps_Admin extends Open_Maps
   public function open_maps_display_preview()
   {
     echo '<div>';
-    echo '<p>' . __('Use the shortcode field below to preview your map', 'open-maps') . '</p>';
+    echo '<p>' . __('Use the shortcode field below to generate a preview from your shortcode', 'open-maps') . '</p>';
     echo '</div>';
   }
 
@@ -329,6 +328,10 @@ class Open_Maps_Admin extends Open_Maps
       $values[0]['lat'] = get_option('open_maps_latitude');
       $values[0]['lon'] = get_option('open_maps_longitude');
       $values[0]['lab'] = '';
+      add_option($args['name'], $values);
+      $this->open_maps_grayscale_callback();
+      $redirect = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+      wp_redirect($redirect);
     }
 
     echo '<div class="open-maps-coords-groups">';
@@ -416,10 +419,10 @@ class Open_Maps_Admin extends Open_Maps
     $shortcode = !empty($sc = get_option('open_maps_shortcode')) ? $sc : IAK_PLACEHOLDER;
     echo do_shortcode($this->include_template('preview.php', true, compact('shortcode')));
     echo '<div class="open-maps-field-description">';
-    echo '<div>' . __('Usage:', 'open-maps') . '</div>';
+    echo '<div>' . __('Usage with parameters:', 'open-maps') . '</div>';
     echo '<ul>';
-    echo '<li>' . __('use the "zoom" parameter in order to override default zoom', 'open-maps') . '</li>';
-    echo '<li>' . __('use an "id" parameter in order to differentiate multiple maps on the same page', 'open-maps') . '</li>';
+    echo '<li><b>zoom: </b>' . __('use the "zoom" parameter in order to override default zoom', 'open-maps') . '</li>';
+    echo '<li><b>id:  </b>' . __('use an "id" parameter in order to differentiate multiple maps on the same page', 'open-maps') . '</li>';
     echo '</ul>';
     echo '</div>';
     echo '<p style="opacity: .8;"><i><small>' . __('Example:', 'open-maps') . '</i>&nbsp;<span class="code">[iak id="2" zoom="3"]</span>' . '</small></i></p>';

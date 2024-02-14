@@ -17,6 +17,7 @@
 /** Preview **/
 .open-maps-preview {
   position: fixed;
+  z-index: 1;
   bottom: 0;
   right: 0;
   width: 600px;
@@ -31,8 +32,10 @@
 }
 .open-maps-field-description ul,
 .open-maps-field-description ul li {
-  list-style-type: none;
+  list-style-type: auto;
   margin: 0;
+  padding-left: 24px;
+  text-indent: -17px;
 }
 .code {
   background: #ddd;
