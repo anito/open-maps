@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Open Street Map\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-05 19:54+0000\n"
-"PO-Revision-Date: 2024-02-14 07:45+0000\n"
+"PO-Revision-Date: 2024-02-14 22:27+0000\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch\n"
 "Language: de_DE\n"
@@ -15,7 +15,7 @@ msgstr ""
 "X-Loco-Version: 2.6.6; wp-6.4.3\n"
 "X-Domain: open-maps"
 
-#: admin/class-open-maps-admin.php:245
+#: admin/class-open-maps-admin.php:253
 msgid "[%d - %d]"
 msgstr "[%d - %d]"
 
@@ -23,11 +23,11 @@ msgstr "[%d - %d]"
 msgid "Axel Nitzschner"
 msgstr "Axel Nitzschner"
 
-#: admin/class-open-maps-admin.php:224
+#: admin/class-open-maps-admin.php:232
 msgid "Coordinates and label"
 msgstr "Koordinaten und Label"
 
-#: admin/class-open-maps-admin.php:249
+#: admin/class-open-maps-admin.php:257
 msgid "Default zoomlevel"
 msgstr "Standard Zoom-Faktor"
 
@@ -35,44 +35,42 @@ msgstr "Standard Zoom-Faktor"
 msgid "Error:"
 msgstr "Fehler:"
 
-#: admin/class-open-maps-admin.php:428
+#: admin/class-open-maps-admin.php:439
 msgid "Example:"
 msgstr "Beispiel:"
 
 #. ID used to identify this section and with which to register options
-#: admin/class-open-maps-admin.php:205
+#: admin/class-open-maps-admin.php:213
 msgid "General settings"
 msgstr "Allgemeine Einstellungen"
 
-#: admin/class-open-maps-admin.php:310
+#: admin/class-open-maps-admin.php:318
 msgid "Geographical coordinates and view settings"
 msgstr "Geografische Koordinaten und Darstellung"
 
-#: admin/class-open-maps-admin.php:270
+#: admin/class-open-maps-admin.php:278
 msgid "Grayscale"
 msgstr "Monochrome Karte"
 
-#. Author URI of the plugin
-msgid "https://www.webpremiere.de"
-msgstr "https://www.webpremiere.de"
-
 #. URI of the plugin
-msgid "https://www.wplauncher.com"
-msgstr "https://www.wplauncher.com"
+msgid "https://dr-dsgvo.de"
+msgstr "https://dr-dsgvo.de"
 
 #. Description of the plugin
-msgid "Interactive Map Substitude for Google Maps"
-msgstr "Interaktive Karte als Ersatz für Google Maps"
+msgid "Interactive Map Substitude for Google Maps based on Dr.DSGVOs' solution"
+msgstr ""
+"Interaktive Karte als DSGVO konformer Google Maps Ersatz basierend auf der "
+"Lösung von Dr.DSGVO"
 
-#: admin/class-open-maps-admin.php:217 admin/class-open-maps-admin.php:352
+#: admin/class-open-maps-admin.php:225 admin/class-open-maps-admin.php:360
 msgid "Label"
 msgstr "Label"
 
-#: admin/class-open-maps-admin.php:217 admin/class-open-maps-admin.php:352
+#: admin/class-open-maps-admin.php:225 admin/class-open-maps-admin.php:360
 msgid "Latitude"
 msgstr "Breitengrad"
 
-#: admin/class-open-maps-admin.php:217 admin/class-open-maps-admin.php:352
+#: admin/class-open-maps-admin.php:225 admin/class-open-maps-admin.php:360
 msgid "Longitude"
 msgstr "Längengrad"
 
@@ -80,12 +78,12 @@ msgstr "Längengrad"
 msgid "Open Street Map"
 msgstr "Open Street Map"
 
-#: admin/class-open-maps-admin.php:144
+#: admin/class-open-maps-admin.php:152
 msgid "Open Street Maps"
 msgstr "Open Street Map"
 
 #. ID used to identify this section and with which to register options
-#: admin/class-open-maps-admin.php:280
+#: admin/class-open-maps-admin.php:288
 msgid "Preview"
 msgstr "Vorschau"
 
@@ -93,7 +91,7 @@ msgstr "Vorschau"
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: admin/class-open-maps-admin.php:299
+#: admin/class-open-maps-admin.php:307
 msgid "Shortcode"
 msgstr "Shortcode"
 
@@ -101,11 +99,11 @@ msgstr "Shortcode"
 msgid "Template not found"
 msgstr "Vorlage nicht gefunden"
 
-#: admin/class-open-maps-admin.php:422
+#: admin/class-open-maps-admin.php:433
 msgid "Usage with parameters:"
 msgstr "Verwendung von Parametern:"
 
-#: admin/class-open-maps-admin.php:425
+#: admin/class-open-maps-admin.php:436
 msgid ""
 "use an \"id\" parameter in order to differentiate multiple maps on the same "
 "page"
@@ -113,13 +111,13 @@ msgstr ""
 "verwende einen \"id\" Parameter um mehrere Karten auf einer Seite eindeutig "
 "zuzuordnen"
 
-#: admin/class-open-maps-admin.php:424
+#: admin/class-open-maps-admin.php:435
 msgid "use the \"zoom\" parameter in order to override default zoom"
 msgstr ""
 "mit einem \"zoom\" Parameter ist es möglich den Standard-Zoom zu "
 "überschreiben"
 
-#: admin/class-open-maps-admin.php:316
+#: admin/class-open-maps-admin.php:324
 msgid "Use the shortcode field below to generate a preview from your shortcode"
 msgstr ""
 "Verwende das Shortcode-Eingabefeld um eine Vorschau deiner Karte anzuzeigen"

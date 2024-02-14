@@ -13,7 +13,8 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Open Street Map
- * Description:       Interactive Map Substitude for Google Maps based on Dr.DSGVOs' (https://dr-dsgvo.de/) solution
+ * Plugin URI:        https://dr-dsgvo.de
+ * Description:       Interactive Map Substitude for Google Maps based on Dr.DSGVOs' solution
  * Version:           1.1.5
  * Author:            Axel Nitzschner
  * License:           GPL-2.0+
