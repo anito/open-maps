@@ -1,4 +1,5 @@
 <?php
+if (!strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME'])) exit;
 $z = intval($_GET['z']);
 $x = intval($_GET['x']);
 $y = intval($_GET['y']);
@@ -64,7 +65,7 @@ function fetch($url, $dir, $path)
   global $filter;
   if ($filter) {
     $image = imagecreatefrompng($fn);
-    if(image_filter($image)) {
+    if (image_filter($image)) {
       imagepng($image, $fn);
     }
   }
