@@ -2,9 +2,8 @@
   const { coords, min_zoom, max_zoom, filter } = params;
 
   const maps = new Map();
-  const minZoom = parseInt(min_zoom); // 9
-  const maxZoom = parseInt(max_zoom); // 18
-  const zooms = maxZoom - minZoom;
+  const minZoom = parseInt(min_zoom);
+  const maxZoom = parseInt(max_zoom);
   const lat = parseFloat(coords[0].lat);
   const lon = parseFloat(coords[0].lon);
   const EPSG = ["EPSG:4326", "EPSG:3857"];
@@ -53,12 +52,12 @@
       '&middot; <a target="_blank" href="https://dr-dsgvo.de/?karte">Lösung von Dr. DSGVO</a>',
     ],
     minZoom,
-    maxZoom
+    maxZoom,
   });
   const tileserver = new ol.layer.Tile({
-    source: source,
+    source,
+    maxZoom,
     declutter: true,
-    maxZoom: maxZoom,
   });
 
   source.on("tileloadend", function () {
@@ -94,7 +93,7 @@
       (extent[2] + deltax * off + (extent[0] - deltax * off)) / 2,
       (extent[3] + deltay * off + (extent[1] - deltay * off)) / 2,
     ];
-  }
+  };
 
   const addMarker = (map) => {
     const layer = new ol.layer.Vector({
@@ -110,10 +109,9 @@
     });
 
     map.addLayer(layer);
-  }
+  };
 
   function init() {
-
     const off_y = ordered[3] - ordered[1];
     if (off_y <= 1) {
       deltay = 0.05;
@@ -321,12 +319,7 @@
         zoom = parseFloat(el.dataset.zoom);
       }
 
-      map.on("moveend", function () {
-        const zoom = map.getView().getZoom();
-        if (zoom > zooms) {
-          // map.getView().setZoom(zooms);
-        }
-      });
+      map.on("moveend", function () {});
 
       initView();
       addMarker(map);
