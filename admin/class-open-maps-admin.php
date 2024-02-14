@@ -427,7 +427,7 @@ class Open_Maps_Admin extends Open_Maps
     echo '<li><b>id:  </b>' . __('use an "id" parameter in order to differentiate multiple maps on the same page', 'open-maps') . '</li>';
     echo '</ul>';
     echo '</div>';
-    echo '<p style="opacity: .8;"><i><small>' . __('Example:', 'open-maps') . '</i>&nbsp;<span class="code">[iak id="2" zoom="3"]</span>' . '</small></i></p>';
+    echo '<p style="opacity: .8;"><i><small>' . __('Example:', 'open-maps') . '</i>&nbsp;<span class="code">[iak id="2" zoom="12.3"]</span>' . '</small></i></p>';
 
   }
 }
