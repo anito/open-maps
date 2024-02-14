@@ -233,7 +233,7 @@ class Open_Maps_Admin extends Open_Maps
     unset($args);
     $args = array(
       'type'              => 'input',
-      'subtype'           => 'number',
+      'subtype'           => array('number', 'size' => 3),
       'min'               => DEFAULT_MIN_ZOOM,
       'max'               => DEFAULT_MAX_ZOOM,
       'placeholder'       => DEFAULT_INI_ZOOM,
@@ -388,16 +388,18 @@ class Open_Maps_Admin extends Open_Maps
           $min = (isset($args['min'])) ? 'min="' . $args['min'] . '"' : '';
           $max = (isset($args['max'])) ? 'max="' . $args['max'] . '"' : '';
           $placeholder = (isset($args['placeholder'])) ? 'placeholder="' . $args['placeholder'] . '"' : '';
+          $size = is_array($args['subtype']) && array_key_exists('size', $args['subtype']) ? $args['subtype']['size'] : 40;
+          $subtype = !is_array($args['subtype']) ? $args['subtype'] : 'text';
           if (isset($args['disabled'])) {
             // hide the actual input bc if it was just a disabled input the info saved in the database would be wrong - bc it would pass empty values and wipe the actual information
-            echo $prependStart . '<input type="' . $args['subtype'] . '" ' . $placeholder . ' id="' . $args['id'] . '_disabled" ' . $step . ' ' . $max . ' ' . $min . ' name="' . $args['name'] . '_disabled" size="40" disabled value="' . esc_attr($value) . '" /><input type="hidden" id="' . $args['id'] . '" ' . $step . ' ' . $max . ' ' . $min . ' name="' . $args['name'] . '" size="40" value="' . esc_attr($value) . '" />' . $prependEnd;
+            echo $prependStart . '<input type="' . $subtype . '" ' . $placeholder . ' id="' . $args['id'] . '_disabled" ' . $step . ' ' . $max . ' ' . $min . ' name="' . $args['name'] . '_disabled" size="' . $size . '" disabled value="' . esc_attr($value) . '" /><input type="hidden" id="' . $args['id'] . '" ' . $step . ' ' . $max . ' ' . $min . ' name="' . $args['name'] . '" size="40" value="' . esc_attr($value) . '" />' . $prependEnd;
           } else {
-            echo $prependStart . '<input type="' . $args['subtype'] . '" ' . $placeholder . ' id="' . $args['id'] . '"' . $required . $step . ' ' . $max . ' ' . $min . ' name="' . $args['name'] . '" size="40" value="' . esc_attr($value) . '" />' . $prependEnd;
+            echo $prependStart . '<input type="' . $subtype . '" ' . $placeholder . ' id="' . $args['id'] . '"' . $required . $step . ' ' . $max . ' ' . $min . ' name="' . $args['name'] . '" size="' . $size . '" value="' . esc_attr($value) . '" />' . $prependEnd;
           }
           /*<input required="required" '.$disabled.' type="number" step="any" id="'.self::$plugin_name.'_cost2" name="'.self::$plugin_name.'_cost2" value="' . esc_attr( $cost ) . '" size="25" /><input type="hidden" id="'.self::$plugin_name.'_cost" step="any" name="'.self::$plugin_name.'_cost" value="' . esc_attr( $cost ) . '" />*/
         } else {
           $checked = ($value) ? 'checked' : '';
-          echo '<input type="' . $args['subtype'] . '" id="' . $args['id'] . '"' . $required . ' name="' . $args['name'] . '" size="40" value="1" ' . $checked . ' />';
+          echo '<input type="' . $args['subtype'] . '" id="' . $args['id'] . '"' . $required . ' name="' . $args['name'] . '" value="1" ' . $checked . ' />';
         }
         break;
       default:
