@@ -315,8 +315,6 @@ function ol_initAll() {
       ol_zoom = parseInt(el.dataset.zoom);
     }
 
-    console.log(id, ol_zoom);
-
     map.on("moveend", function () {
       const zoom = map.getView().getZoom();
       if (zoom > ol_zooms) {
