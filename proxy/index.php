@@ -1,5 +1,5 @@
 <?php
-if (!strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME'])) exit;
+if (8 < strpos("{$_SERVER['HTTP_REFERER']}", $_SERVER['SERVER_NAME'])) exit;
 $z = intval($_GET['z']);
 $x = intval($_GET['x']);
 $y = intval($_GET['y']);
