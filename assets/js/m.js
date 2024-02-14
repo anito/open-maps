@@ -12,11 +12,11 @@ const EPSG = ["EPSG:4326", "EPSG:3857"];
 let ol_deltax = 0.7;
 let ol_deltay = 0.3;
 let ol_zoom;
-let ol_path = getPath();
+let ol_path = ol_getPath();
 let ol_tileerror = 0;
 let ol_failover = 0;
 let ol_view;
-let ol_ordered = getOrdered();
+let ol_ordered = ol_getOrdered();
 let off = 1;
 let ol_center;
 let ol_extent;
@@ -33,7 +33,7 @@ function createFeatures() {
   });
 }
 
-function getOrdered() {
+function ol_getOrdered() {
   const lats = coords
     .map((coord) => parseFloat(coord.lat))
     .sort((a, b) => (parseFloat(a) > parseFloat(b) ? 1 : -1));
@@ -115,24 +115,12 @@ function ol_addMarker(map) {
   map.addLayer(layer);
 }
 
-function getPath() {
-  const ol_script_url = document.currentScript.src;
-  const hostname = document.location.hostname;
-  let path;
-  let ol_idx1 = (" " + ol_script_url).indexOf(hostname);
-  if (ol_idx1 > 0) {
-    ol_idx1--;
-    ol_idx1 += hostname.length;
-    let ol_idx2 = ol_script_url.indexOf("/", ol_idx1);
-    if (ol_idx2 > 0) {
-      path = ol_script_url.substr(ol_idx2);
-      let ol_idx3 = path.lastIndexOf("/");
-      if (ol_idx3 > 0) {
-        path = path.substr(0, ol_idx3 + 1);
-      }
-    }
-  }
-  return path;
+function ol_getPath() {
+  const url = document.currentScript.src;
+  const regex = /\/(.*)\//;
+  const pathname = new URL(url).pathname;
+  const matches = pathname.match(regex);
+  return matches.length && matches[0];
 }
 
 function ol_initAll() {
