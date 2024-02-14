@@ -13,23 +13,15 @@ const ol_root = document.location.hostname;
 const ol_deltax = 0.7;
 const ol_deltay = 0.3;
 const EPSG = ["EPSG:4326", "EPSG:3857"];
+const ol_path = (() => {
+  const url = document.currentScript.src;
+  const regex = /\/(.*)\//;
+  const pathname = new URL(url).pathname;
+  const matches = pathname.match(regex);
+  return matches.length && matches[0];
+})()
 
 let ol_zoom;
-let ol_path;
-let ol_idx1 = (" " + ol_script_url).indexOf(ol_root);
-if (ol_idx1 > 0) {
-  ol_idx1--;
-  ol_idx1 += ol_root.length;
-  let ol_idx2 = ol_script_url.indexOf("/", ol_idx1);
-  if (ol_idx2 > 0) {
-    ol_path = ol_script_url.substr(ol_idx2);
-    let ol_idx3 = ol_path.lastIndexOf("/");
-    if (ol_idx3 > 0) {
-      ol_path = ol_path.substr(0, ol_idx3 + 1);
-    }
-  }
-}
-
 let ol_tileerror = 0;
 let ol_failover = 0;
 
