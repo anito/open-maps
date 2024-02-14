@@ -389,7 +389,8 @@ class Open_Maps_Admin extends Open_Maps
           $max = (isset($args['max'])) ? 'max="' . $args['max'] . '"' : '';
           $placeholder = (isset($args['placeholder'])) ? 'placeholder="' . $args['placeholder'] . '"' : '';
           $size = is_array($args['subtype']) && array_key_exists('size', $args['subtype']) ? $args['subtype']['size'] : 40;
-          $subtype = !is_array($args['subtype']) ? $args['subtype'] : 'text';
+          $subtype = !is_array($args['subtype']) ? $args['subtype'] : (!empty($i = array_intersect($args['subtype'], array('text', 'number'))) ? $i[0] : 'string');
+
           if (isset($args['disabled'])) {
             // hide the actual input bc if it was just a disabled input the info saved in the database would be wrong - bc it would pass empty values and wipe the actual information
             echo $prependStart . '<input type="' . $subtype . '" ' . $placeholder . ' id="' . $args['id'] . '_disabled" ' . $step . ' ' . $max . ' ' . $min . ' name="' . $args['name'] . '_disabled" size="' . $size . '" disabled value="' . esc_attr($value) . '" /><input type="hidden" id="' . $args['id'] . '" ' . $step . ' ' . $max . ' ' . $min . ' name="' . $args['name'] . '" size="40" value="' . esc_attr($value) . '" />' . $prependEnd;
