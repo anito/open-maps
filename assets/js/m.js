@@ -1,27 +1,48 @@
 const { coords, ini_zoom, min_zoom, max_zoom, filter } = OpenStreetParams;
 
 const maps = new Map();
-const features = createFeatures();
 const ol_minzoom = parseInt(min_zoom); // 9
 const ol_maxzoom = parseInt(max_zoom); // 18
 const ol_zooms = ol_maxzoom - ol_minzoom;
 const ol_lat = parseFloat(coords[0].lat);
 const ol_lon = parseFloat(coords[0].lon);
 const EPSG = ["EPSG:4326", "EPSG:3857"];
+const ol_path = (() => {
+  const url = document.currentScript.src;
+  const regex = /\/(.*)\//;
+  const pathname = new URL(url).pathname;
+  const matches = pathname.match(regex);
+  return matches.length && matches[0];
+})();
+const ol_features = (() => {
+  return coords.map((coord) => {
+    const { lat, lon, lab: name } = coord;
+    return new ol.Feature({
+      geometry: new ol.geom.Point(ol.proj.fromLonLat([lon, lat])),
+      name,
+    });
+  });
+})();
+const ol_ordered = (() => {
+  const lats = coords
+    .map((coord) => parseFloat(coord.lat))
+    .sort((a, b) => (parseFloat(a) > parseFloat(b) ? 1 : -1));
+  const lons = coords
+    .map((coord) => parseFloat(coord.lon))
+    .sort((a, b) => (parseFloat(a) > parseFloat(b) ? 1 : -1));
+
+  return [lons[0], lats[0], lons[lons.length - 1], lats[lats.length - 1]];
+})();
 
 let ol_deltax = 0.7;
 let ol_deltay = 0.3;
-let ol_zoom;
-let ol_path = ol_getPath();
 let ol_tileerror = 0;
 let ol_failover = 0;
+let ol_zoom;
 let ol_view;
-let ol_ordered = ol_getOrdered();
 let off = 1;
 let ol_center;
 let ol_extent;
-let ol_maxResolution;
-let ol_resolution = 0;
 
 function createFeatures() {
   return coords.map((coord) => {
@@ -102,7 +123,7 @@ function ol_initView() {
 function ol_addMarker(map) {
   const layer = new ol.layer.Vector({
     source: new ol.source.Vector({
-      features,
+      features: ol_featchers,
     }),
     style: new ol.style.Style({
       image: new ol.style.Icon({
@@ -298,7 +319,7 @@ function ol_initAll() {
         ol_tileserver,
         new ol.layer.Vector({
           source: new ol.source.Vector({
-            features,
+            features: ol_featchers,
           }),
           style: function (feature) {
             labelStyle.getText().setText(feature.get("name"));
