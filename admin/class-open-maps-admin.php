@@ -36,6 +36,7 @@ class Open_Maps_Admin extends Open_Maps
     add_action('admin_footer', array($this, 'add_admin_footer_template'));
     add_action('admin_init', array($this, 'registerAndBuildFields'));
     add_action('option', array($this, 'registerAndBuildFields'));
+    add_filter('pre_update_option_open_maps_ini_zoom', array($this, 'open_maps_ini_zoom_callback'), 10, 2);
     add_action('update_option_open_maps_grayscale', array($this, 'open_maps_grayscale_callback'), 10, 0);
     add_filter('option_open_maps_coords', array($this, 'open_maps_coords_callback'));
     add_filter('open-maps/template-path', array($this, 'template_path'));
@@ -63,6 +64,13 @@ class Open_Maps_Admin extends Open_Maps
       }
     }
     return $value;
+  }
+
+  public function open_maps_ini_zoom_callback($new, $old)
+  {
+    if ((float) $new > DEFAULT_MAX_ZOOM) return DEFAULT_MAX_ZOOM;
+    if ((float) $new < DEFAULT_MIN_ZOOM) return DEFAULT_MIN_ZOOM;
+    return $new;
   }
 
   /**
@@ -429,6 +437,5 @@ class Open_Maps_Admin extends Open_Maps
     echo '</ul>';
     echo '</div>';
     echo '<p style="opacity: .8;"><i><small>' . __('Example:', 'open-maps') . '</i>&nbsp;<span class="code">[iak id="2" zoom="12.3"]</span>' . '</small></i></p>';
-
   }
 }

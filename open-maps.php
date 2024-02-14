@@ -29,7 +29,7 @@ if (!defined('WPINC')) {
 
 define('DEFAULT_INI_ZOOM', 1);
 define('DEFAULT_MIN_ZOOM', 1);
-define('DEFAULT_MAX_ZOOM', 19);
+define('DEFAULT_MAX_ZOOM', 20);
 define('IAK_PLACEHOLDER', '[iak]');
 
 /**
