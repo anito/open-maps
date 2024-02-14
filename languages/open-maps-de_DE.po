@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Open Street Map\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-05 19:54+0000\n"
-"PO-Revision-Date: 2024-02-14 22:27+0000\n"
+"PO-Revision-Date: 2024-02-14 22:52+0000\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch\n"
 "Language: de_DE\n"
@@ -50,7 +50,7 @@ msgstr "Geografische Koordinaten und Darstellung"
 
 #: admin/class-open-maps-admin.php:278
 msgid "Grayscale"
-msgstr "Monochrome Karte"
+msgstr "Monochromatische Karte"
 
 #. URI of the plugin
 msgid "https://dr-dsgvo.de"
