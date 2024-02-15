@@ -5,7 +5,7 @@ if (!defined('WPINC')) {
   die();
 }
 
-// If class `Kleinanzeigen_Templates` doesn't exists yet.
+// If class `Open_Maps_Templates` doesn't exists yet.
 if (!class_exists('Open_Maps_Templates')) {
 
 

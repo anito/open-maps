@@ -32,46 +32,63 @@
   function open_maps_init(key) {
     if (isNaN(key)) return;
 
-    const { group, add, remove } = OpenStreetAdminParams.get_elements(key);
+    const { groupEl, addEl, dupEl, remEl } =
+      OpenStreetAdminParams.get_elements(key);
 
-    $(remove).on("click", function (e) {
+    $(remEl).on("click", function (e) {
       e.preventDefault();
-			$(group).remove();
+      $(groupEl).remove();
     });
 
-    $(add).on("click", function (e) {
-      e.preventDefault();
+    $(addEl).on("click", add.bind(this, false));
 
-      const newGroup = $("#open-maps-coords-group-template")
-        .clone()
-        .removeClass("template")
-        .attr("id", `open-maps-coords-group-${++key}`);
-
-			const containerEl = $(this).parents(".group").parent();
-      $(newGroup).appendTo(containerEl);
-
-      OpenStreetAdminParams.sanitize_fields(newGroup);
-      OpenStreetAdminParams.open_maps_init(key);
-    });
+    $(dupEl).on("click", add.bind(this, true));
   }
 
   function get_elements(key) {
-    const group = $(`#open-maps-coords-group-${key}`);
+    const groupEl = $(`#open-maps-coords-group-${key}`);
     return {
-      group,
-      add: $(".action-add", group),
-      remove: $(".action-remove", group),
+      groupEl,
+      addEl: $(".action-add", groupEl),
+      dupEl: $(".action-duplicate", groupEl),
+      remEl: $(".action-remove", groupEl),
     };
   }
 
+  const add = function (dup, e) {
+    e.preventDefault();
+
+    const el = e.target;
+    const containerEl = $(el).parents(".group").parent();
+    const key = containerEl.children().length;
+    const curGroup = $(el).parents(".group")[0];
+
+    const newGroup = $("#open-maps-coords-group-template")
+      .clone()
+      .removeClass("template")
+      .attr("id", `open-maps-coords-group-${key}`);
+
+    if (dup) {
+      $("input", curGroup).val((idx, val) => {
+        $(`input:nth-child(${idx + 1})`, newGroup).val(val);
+        return val;
+      });
+    }
+
+    $(newGroup).appendTo(containerEl);
+
+    OpenStreetAdminParams.sanitize_fields(newGroup);
+    OpenStreetAdminParams.open_maps_init(key);
+  };
+
   function sanitize_fields(group) {
     const inputs = $("input", group);
-		const aId = $(group).attr("id");
-		const regex = /\d{1,}/g;
-		const index = aId.search(regex);
-		const id = aId.substr(index);
+    const aId = $(group).attr("id");
+    const regex = /\d{1,}/g;
+    const index = aId.search(regex);
+    const id = aId.substr(index);
     $(inputs).each((i, el) => {
-      $(el).attr("name", $(el).attr('name').replace('[template]', `[${id}]`));
+      $(el).attr("name", $(el).attr("name").replace("[template]", `[${id}]`));
     });
   }
 

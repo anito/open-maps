@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Open Street Map\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-05 19:54+0000\n"
-"PO-Revision-Date: 2024-02-14 22:52+0000\n"
+"PO-Revision-Date: 2024-02-15 14:52+0000\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch\n"
 "Language: de_DE\n"
@@ -15,7 +15,7 @@ msgstr ""
 "X-Loco-Version: 2.6.6; wp-6.4.3\n"
 "X-Domain: open-maps"
 
-#: admin/class-open-maps-admin.php:253
+#: admin/class-open-maps-admin.php:251
 msgid "[%d - %d]"
 msgstr "[%d - %d]"
 
@@ -23,13 +23,18 @@ msgstr "[%d - %d]"
 msgid "Axel Nitzschner"
 msgstr "Axel Nitzschner"
 
-#: admin/class-open-maps-admin.php:232
+#: admin/class-open-maps-admin.php:230
 msgid "Coordinates and label"
 msgstr "Koordinaten und Label"
 
-#: admin/class-open-maps-admin.php:257
+#: admin/class-open-maps-admin.php:255
 msgid "Default zoomlevel"
 msgstr "Standard Zoom-Faktor"
+
+#: admin/class-open-maps-admin.php:434
+msgid "differentiate multiple maps on the same page"
+msgstr ""
+"Ordne bei Verwendung mehrerer Karten auf einer Seite eine eindeutige ID zu"
 
 #: includes/class-open-maps-templates.php:38
 msgid "Error:"
@@ -40,15 +45,15 @@ msgid "Example:"
 msgstr "Beispiel:"
 
 #. ID used to identify this section and with which to register options
-#: admin/class-open-maps-admin.php:213
+#: admin/class-open-maps-admin.php:211
 msgid "General settings"
 msgstr "Allgemeine Einstellungen"
 
-#: admin/class-open-maps-admin.php:318
+#: admin/class-open-maps-admin.php:316
 msgid "Geographical coordinates and view settings"
 msgstr "Geografische Koordinaten und Darstellung"
 
-#: admin/class-open-maps-admin.php:278
+#: admin/class-open-maps-admin.php:276
 msgid "Grayscale"
 msgstr "Monochromatische Karte"
 
@@ -62,28 +67,36 @@ msgstr ""
 "Interaktive Karte als DSGVO konformer Google Maps Ersatz basierend auf der "
 "Lösung von Dr.DSGVO"
 
-#: admin/class-open-maps-admin.php:225 admin/class-open-maps-admin.php:360
+#: admin/class-open-maps-admin.php:223 admin/class-open-maps-admin.php:359
 msgid "Label"
 msgstr "Label"
 
-#: admin/class-open-maps-admin.php:225 admin/class-open-maps-admin.php:360
+#: admin/class-open-maps-admin.php:223 admin/class-open-maps-admin.php:359
 msgid "Latitude"
 msgstr "Breitengrad"
 
-#: admin/class-open-maps-admin.php:225 admin/class-open-maps-admin.php:360
+#: admin/class-open-maps-admin.php:223 admin/class-open-maps-admin.php:359
 msgid "Longitude"
 msgstr "Längengrad"
+
+#: admin/class-open-maps-admin.php:436
+msgid "only displays points of this ids"
+msgstr "Stellt nur die Punkte dar, die hier mit ihrem Index angegeben werden"
 
 #. Name of the plugin
 msgid "Open Street Map"
 msgstr "Open Street Map"
 
-#: admin/class-open-maps-admin.php:152
+#: admin/class-open-maps-admin.php:150
 msgid "Open Street Maps"
 msgstr "Open Street Map"
 
+#: admin/class-open-maps-admin.php:435
+msgid "overrides default zoom"
+msgstr "Überschreibt den Standard Zoom"
+
 #. ID used to identify this section and with which to register options
-#: admin/class-open-maps-admin.php:288
+#: admin/class-open-maps-admin.php:286
 msgid "Preview"
 msgstr "Vorschau"
 
@@ -91,7 +104,7 @@ msgstr "Vorschau"
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: admin/class-open-maps-admin.php:307
+#: admin/class-open-maps-admin.php:305
 msgid "Shortcode"
 msgstr "Shortcode"
 
@@ -99,25 +112,11 @@ msgstr "Shortcode"
 msgid "Template not found"
 msgstr "Vorlage nicht gefunden"
 
-#: admin/class-open-maps-admin.php:433
+#: admin/class-open-maps-admin.php:432
 msgid "Usage with parameters:"
 msgstr "Verwendung von Parametern:"
 
-#: admin/class-open-maps-admin.php:436
-msgid ""
-"use an \"id\" parameter in order to differentiate multiple maps on the same "
-"page"
-msgstr ""
-"verwende einen \"id\" Parameter um mehrere Karten auf einer Seite eindeutig "
-"zuzuordnen"
-
-#: admin/class-open-maps-admin.php:435
-msgid "use the \"zoom\" parameter in order to override default zoom"
-msgstr ""
-"mit einem \"zoom\" Parameter ist es möglich den Standard-Zoom zu "
-"überschreiben"
-
-#: admin/class-open-maps-admin.php:324
+#: admin/class-open-maps-admin.php:322
 msgid "Use the shortcode field below to generate a preview from your shortcode"
 msgstr ""
 "Verwende das Shortcode-Eingabefeld um eine Vorschau deiner Karte anzuzeigen"

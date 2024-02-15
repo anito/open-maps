@@ -15,7 +15,7 @@
  * Plugin Name:       Open Street Map
  * Plugin URI:        https://dr-dsgvo.de
  * Description:       Interactive Map Substitude for Google Maps based on Dr.DSGVOs' solution
- * Version:           1.1.5
+ * Version:           1.1.6
  * Author:            Axel Nitzschner
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt

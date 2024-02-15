@@ -13,26 +13,34 @@
     const matches = pathname.match(/\/(.*)\//);
     return matches.length && matches[0];
   })();
-  const features = (() => {
-    return coords.map((coord) => {
+  const createFeatures = (arr = []) => {
+    let c = coords.slice();
+    if(arr.length) {
+      console.log(c);
+      console.log(arr);
+      c = coords.filter((coord) => -1 != arr.indexOf(coord['index']))
+    }
+    return c.map((coord) => {
       const { lat, lon, lab: name } = coord;
       return new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.fromLonLat([lon, lat])),
         name,
       });
     });
-  })();
+
+  };
   const ordered = (() => {
     const lats = coords
-      .map((coord) => parseFloat(coord.lat))
-      .sort((a, b) => (parseFloat(a) > parseFloat(b) ? 1 : -1));
+    .map((coord) => parseFloat(coord.lat))
+    .sort((a, b) => (parseFloat(a) > parseFloat(b) ? 1 : -1));
     const lons = coords
-      .map((coord) => parseFloat(coord.lon))
-      .sort((a, b) => (parseFloat(a) > parseFloat(b) ? 1 : -1));
-
+    .map((coord) => parseFloat(coord.lon))
+    .sort((a, b) => (parseFloat(a) > parseFloat(b) ? 1 : -1));
+    
     return [lons[0], lats[0], lons[lons.length - 1], lats[lats.length - 1]];
   })();
-
+  
+  let features;
   let deltax = 0.7;
   let deltay = 0.3;
   let tileerror = 0;
@@ -318,6 +326,14 @@
       if ("zoom" in el.dataset) {
         zoom = parseFloat(el.dataset.zoom);
       }
+      let points = [];
+      if ("points" in el.dataset) {
+        const getPoints = () => {
+          return el.dataset.points.trim().split(',');
+        }
+        points = getPoints();
+      }
+      features = createFeatures(points)
 
       map.on("moveend", function () {});
 

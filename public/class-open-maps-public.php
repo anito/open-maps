@@ -96,7 +96,6 @@ class Open_Maps_Public extends Open_Maps_Templates
 
     $coords            = get_option('open_maps_coords');
     $filter            = get_option('open_maps_grayscale');
-    $ini_zoom          = (int) !empty($ini_zoom = get_option('open_maps_ini_zoom')) ? $ini_zoom : DEFAULT_INI_ZOOM;
     $min_zoom          = DEFAULT_MIN_ZOOM;
     $max_zoom          = DEFAULT_MAX_ZOOM;
 
@@ -104,7 +103,6 @@ class Open_Maps_Public extends Open_Maps_Templates
     wp_enqueue_script(self::$plugin_name . '-open-maps-main', plugin_dir_url(__DIR__) . 'assets/js/m.js', array(), self::$version, true);
     wp_localize_script(self::$plugin_name . '-open-maps-main', 'OpenStreetParams', array(
       'coords'    => $coords,
-      'ini_zoom'  => $ini_zoom,
       'min_zoom'  => $min_zoom,
       'max_zoom'  => $max_zoom,
       'filter'    => $filter,
@@ -117,11 +115,12 @@ class Open_Maps_Public extends Open_Maps_Templates
   function iak($atts)
   {
     $atts = shortcode_atts(array(
-      'id'    => '1',
-      'zoom'  => !empty($ini_zoom = get_option('open_maps_ini_zoom')) ? $ini_zoom : DEFAULT_INI_ZOOM
+      'id'      => '1',
+      'zoom'    => !empty($ini_zoom = get_option('open_maps_ini_zoom')) ? $ini_zoom : DEFAULT_INI_ZOOM,
+      'points'  => ''
     ), $atts, 'iak');
 
-    return '<div tabindex="700" id="ol-map-' . $atts["id"] . '" data-id="' . $atts['id'] . '" data-zoom="' . $atts["zoom"] . '" class="ol-map" style="height: 100%; margin: 0; padding: 0;"></div>';
+    return '<div tabindex="700" id="ol-map-' . $atts["id"] . '" data-id="' . $atts['id'] . '" data-zoom="' . $atts["zoom"] . '"' . (!empty($atts["points"]) ? ' data-points="' . preg_replace('/\s/', '', $atts["points"]) . '"' : '') . ' class="ol-map" style="height: 100%; margin: 0; padding: 0;"></div>';
   }
 
   public function register_shortcode()

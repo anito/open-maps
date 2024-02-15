@@ -129,7 +129,6 @@ class Open_Maps_Admin extends Open_Maps
 
     $coords            = get_option('open_maps_coords');
     $filter            = get_option('open_maps_grayscale');
-    $ini_zoom          = (int) !empty($ini_zoom = get_option('open_maps_ini_zoom')) ? $ini_zoom : DEFAULT_INI_ZOOM;
     $min_zoom          = DEFAULT_MIN_ZOOM;
     $max_zoom          = DEFAULT_MAX_ZOOM;
 
@@ -137,7 +136,6 @@ class Open_Maps_Admin extends Open_Maps
     wp_enqueue_script(self::$plugin_name . '-open-maps-main', plugin_dir_url(__DIR__) . 'assets/js/m.js', array(), self::$version, true);
     wp_localize_script(self::$plugin_name . '-open-maps-main', 'OpenStreetParams', array(
       'coords'    => $coords,
-      'ini_zoom'  => $ini_zoom,
       'min_zoom'  => $min_zoom,
       'max_zoom'  => $max_zoom,
       'filter'    => $filter,
@@ -294,7 +292,7 @@ class Open_Maps_Admin extends Open_Maps
     unset($args);
     $args = array(
       'type'              => 'input',
-      'subtype'           => array('text', 'size' => 20),
+      'subtype'           => array('text', 'size' => 40),
       'id'                => 'open_maps_shortcode',
       'name'              => 'open_maps_shortcode',
       'placeholder'       => htmlspecialchars(IAK_PLACEHOLDER),
@@ -337,6 +335,7 @@ class Open_Maps_Admin extends Open_Maps
       $values[0]['lon'] = get_option('open_maps_longitude');
       $values[0]['lab'] = '';
       add_option($args['name'], $values);
+      // Empty existing tiles
       $this->open_maps_grayscale_callback();
       $redirect = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
       wp_redirect($redirect);
@@ -432,10 +431,11 @@ class Open_Maps_Admin extends Open_Maps
     echo '<div class="open-maps-field-description">';
     echo '<div>' . __('Usage with parameters:', 'open-maps') . '</div>';
     echo '<ul>';
-    echo '<li><b>zoom: </b>' . __('use the "zoom" parameter in order to override default zoom', 'open-maps') . '</li>';
-    echo '<li><b>id:  </b>' . __('use an "id" parameter in order to differentiate multiple maps on the same page', 'open-maps') . '</li>';
+    echo '<li><b>id:  </b>' . __('differentiate multiple maps on the same page', 'open-maps') . '</li>';
+    echo '<li><b>zoom: </b>' . __('overrides default zoom', 'open-maps') . '</li>';
+    echo '<li><b>points:  </b>' . __('only displays points of this ids', 'open-maps') . '</li>';
     echo '</ul>';
     echo '</div>';
-    echo '<p style="opacity: .8;"><i><small>' . __('Example:', 'open-maps') . '</i>&nbsp;<span class="code">[iak id="2" zoom="12.3"]</span>' . '</small></i></p>';
+    echo '<p style="opacity: .8;"><i><small>' . __('Example:', 'open-maps') . '</i>&nbsp;<span class="code">[iak id="2" zoom="12.3" points="3,4"]</span>' . '</small></i></p>';
   }
 }
