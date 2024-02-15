@@ -78,4 +78,4 @@ if (!class_exists('Open_Maps_Templates')) {
   }
 }
 
-Kleinanzeigen_Templates::get_instance();
+Open_Maps_Templates::get_instance();
