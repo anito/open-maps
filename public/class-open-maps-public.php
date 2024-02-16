@@ -20,33 +20,13 @@
  * @subpackage Open_Maps/public
  * @author     Ben Shadle <benshadle@gmail.com>
  */
-class Open_Maps_Public extends Open_Maps_Templates
+class Open_Maps_Public extends Open_Maps
 {
-
-  /**
-   * The ID of this plugin.
-   *
-   * @since    1.0.0
-   * @access   private
-   * @var      string    $plugin_name    The ID of this plugin.
-   */
-  private static $plugin_name;
-
-  /**
-   * The version of this plugin.
-   *
-   * @since    1.0.0
-   * @access   private
-   * @var      string    $version    The current version of this plugin.
-   */
-  private static $version;
 
   /**
    * Initialize the class and set its properties.
    *
    * @since    1.0.0
-   * @param      string    $plugin_name       The name of the plugin.
-   * @param      string    $version    The version of this plugin.
    */
   public function __construct()
   {
@@ -113,7 +93,7 @@ class Open_Maps_Public extends Open_Maps_Templates
   }
 
   function iak($atts)
-  {
+  {;
     $atts = shortcode_atts(array(
       'id'      => '1',
       'zoom'    => !empty($ini_zoom = get_option('open_maps_ini_zoom')) ? $ini_zoom : DEFAULT_INI_ZOOM,

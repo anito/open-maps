@@ -13,23 +13,27 @@
     const matches = pathname.match(/\/(.*)\//);
     return matches.length && matches[0];
   })();
-  const createFeatures = (arr = []) => {
-    let c = coords.slice();
-    if(arr.length) {
-      console.log(c);
-      console.log(arr);
-      c = coords.filter((coord) => -1 != arr.indexOf(coord['index']))
+  const filterCoords = () => {
+    let c =  coords.slice();
+    if(points.length) {
+      c = coords.filter((coord) => -1 != points.indexOf(coord['index']))
     }
-    return c.map((coord) => {
+    return c;
+  }
+  const createFeatures = () => {
+    let coords = filterCoords();
+    
+    return coords.map((coord) => {
       const { lat, lon, lab: name } = coord;
       return new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.fromLonLat([lon, lat])),
         name,
       });
     });
-
   };
-  const ordered = (() => {
+  const getOrdered = () => {
+    const coords = filterCoords();
+
     const lats = coords
     .map((coord) => parseFloat(coord.lat))
     .sort((a, b) => (parseFloat(a) > parseFloat(b) ? 1 : -1));
@@ -38,9 +42,10 @@
     .sort((a, b) => (parseFloat(a) > parseFloat(b) ? 1 : -1));
     
     return [lons[0], lats[0], lons[lons.length - 1], lats[lats.length - 1]];
-  })();
+  };
   
   let features;
+  let points = [];
   let deltax = 0.7;
   let deltay = 0.3;
   let tileerror = 0;
@@ -84,6 +89,24 @@
     }
   });
   const initView = () => {
+    
+     const ordered = getOrdered();
+
+    const off_y = ordered[3] - ordered[1];
+    if (off_y <= 1) {
+      deltay = 0.05;
+    } else if (off_y <= 2) {
+      deltay = 0.1;
+    } else if (off_y <= 6) {
+      deltay = 0.2;
+    } else if (off_y <= 10) {
+      deltay = 0.3;
+    } else if (off_y <= 18) {
+      deltay = 0.5;
+    } else {
+      deltay = 1.9;
+    }
+
     const off = 1;
     extent = ol.proj.transformExtent(
       [
@@ -120,21 +143,6 @@
   };
 
   function init() {
-    const off_y = ordered[3] - ordered[1];
-    if (off_y <= 1) {
-      deltay = 0.05;
-    } else if (off_y <= 2) {
-      deltay = 0.1;
-    } else if (off_y <= 6) {
-      deltay = 0.2;
-    } else if (off_y <= 10) {
-      deltay = 0.3;
-    } else if (off_y <= 18) {
-      deltay = 0.5;
-    } else {
-      deltay = 1.9;
-    }
-
     let mouseWheelZoom = true;
     if (window && window.screen) {
       if (
@@ -266,30 +274,22 @@
         scale: 0.1,
       }),
     });
-    const circleStyle = new ol.style.Style({
-      image: new ol.style.Circle({
-        fill: new ol.style.Fill({
-          color: "rgba(255,255,255,0.4)",
-        }),
-        stroke: new ol.style.Stroke({
-          color: "#3399CC",
-          width: 0.35,
-        }),
-        radius: 5,
-      }),
-      fill: new ol.style.Fill({
-        color: "rgba(255,255,255,0.4)",
-      }),
-      stroke: new ol.style.Stroke({
-        color: "#3399CC",
-        width: 1.25,
-      }),
-    });
-    const style = [iconStyle, labelStyle, circleStyle];
+    const style = [iconStyle, labelStyle];
 
     const targets = document.querySelectorAll(".ol-map");
     targets.forEach((el) => {
       const id = el.dataset.id;
+
+      if ("zoom" in el.dataset) {
+        zoom = parseFloat(el.dataset.zoom);
+      }
+      if ("points" in el.dataset) {
+        const getPoints = () => {
+          return el.dataset.points.trim().split(",").map((p) => parseInt(p));
+        };
+        points = getPoints();
+      }
+      features = createFeatures();
 
       const view = new ol.View({
         minZoom,
@@ -322,18 +322,6 @@
         view,
       });
       maps.set(id, { map });
-
-      if ("zoom" in el.dataset) {
-        zoom = parseFloat(el.dataset.zoom);
-      }
-      let points = [];
-      if ("points" in el.dataset) {
-        const getPoints = () => {
-          return el.dataset.points.trim().split(',');
-        }
-        points = getPoints();
-      }
-      features = createFeatures(points)
 
       map.on("moveend", function () {});
 

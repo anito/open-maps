@@ -60,19 +60,21 @@
 
     const el = e.target;
     const containerEl = $(el).parents(".group").parent();
-    const key = containerEl.children().length;
+    const key = containerEl.children().length + 1;
     const curGroup = $(el).parents(".group")[0];
 
     const newGroup = $("#open-maps-coords-group-template")
       .clone()
       .removeClass("template")
       .attr("id", `open-maps-coords-group-${key}`);
+		$('.open-maps-index', newGroup).html(key);
 
     if (dup) {
       $("input", curGroup).val((idx, val) => {
         $(`input:nth-child(${idx + 1})`, newGroup).val(val);
         return val;
       });
+			$("input[type=hidden]", newGroup).val(key);
     }
 
     $(newGroup).appendTo(containerEl);

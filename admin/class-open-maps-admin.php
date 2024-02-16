@@ -37,6 +37,7 @@ class Open_Maps_Admin extends Open_Maps
     add_action('admin_init', array($this, 'registerAndBuildFields'));
     add_action('option', array($this, 'registerAndBuildFields'));
     add_filter('pre_update_option_open_maps_ini_zoom', array($this, 'open_maps_ini_zoom_callback'), 10, 2);
+    add_filter('pre_update_option_open_maps_coords', array($this, 'open_maps_pre_update_coords_callback'), 10, 2);
     add_action('update_option_open_maps_grayscale', array($this, 'open_maps_grayscale_callback'), 10, 0);
     add_filter('option_open_maps_coords', array($this, 'open_maps_coords_callback'));
     add_filter('open-maps/template-path', array($this, 'template_path'));
@@ -45,6 +46,17 @@ class Open_Maps_Admin extends Open_Maps
   public function loadFiles()
   {
     require_once $this->plugin_path('includes/class-open-maps-templates.php');
+  }
+
+  public function open_maps_pre_update_coords_callback($new, $old)
+  {
+
+    $new = array_values($new);
+    foreach ($new as $key => $val) {
+      $new[$key]['index'] = $key + 1;
+    }
+
+    return $new;
   }
 
   public function open_maps_coords_callback($value)
@@ -63,7 +75,7 @@ class Open_Maps_Admin extends Open_Maps
         $value[$key]['lon'] = (float) $val['lon'];
       }
     }
-    return $value;
+    return array_values((array) $value);
   }
 
   public function open_maps_ini_zoom_callback($new, $old)
@@ -341,12 +353,12 @@ class Open_Maps_Admin extends Open_Maps
       wp_redirect($redirect);
     }
 
-    echo '<div class="open-maps-coords-groups">';
+    echo '<ol class="open-maps-coords-groups">';
     foreach ($values as $key => $val) {
-      $args['id'] = $args['classes'][0] . '-' . $key;
+      $args['id'] = $args['classes'][0] . '-' . ++$key;
       $this->include_template('coords-group.php', false, compact('args', 'key', 'val'));
     }
-    echo '</div>';
+    echo '</ol>';
   }
 
   public function add_admin_footer_template()
