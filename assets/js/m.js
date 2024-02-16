@@ -13,16 +13,17 @@
     const matches = pathname.match(/\/(.*)\//);
     return matches.length && matches[0];
   })();
-  const filterCoords = () => {
-    let c =  coords.slice();
-    if(points.length) {
-      c = coords.filter((coord) => -1 != points.indexOf(coord['index']))
+  const filterCoords = (id) => {
+    const points = maps.get(id).points || [];
+    let c = coords.slice();
+    if (points.length) {
+      c = coords.filter((coord) => -1 != points.indexOf(coord["index"]));
     }
     return c;
-  }
-  const createFeatures = () => {
-    let coords = filterCoords();
-    
+  };
+  const createFeatures = (id) => {
+    let coords = filterCoords(id);
+
     return coords.map((coord) => {
       const { lat, lon, lab: name } = coord;
       return new ol.Feature({
@@ -31,28 +32,34 @@
       });
     });
   };
-  const getOrdered = () => {
-    const coords = filterCoords();
+  const getOrdered = (id) => {
+    const coords = filterCoords(id);
 
     const lats = coords
-    .map((coord) => parseFloat(coord.lat))
-    .sort((a, b) => (parseFloat(a) > parseFloat(b) ? 1 : -1));
+      .map((coord) => parseFloat(coord.lat))
+      .sort((a, b) => (parseFloat(a) > parseFloat(b) ? 1 : -1));
     const lons = coords
-    .map((coord) => parseFloat(coord.lon))
-    .sort((a, b) => (parseFloat(a) > parseFloat(b) ? 1 : -1));
-    
+      .map((coord) => parseFloat(coord.lon))
+      .sort((a, b) => (parseFloat(a) > parseFloat(b) ? 1 : -1));
+
     return [lons[0], lats[0], lons[lons.length - 1], lats[lats.length - 1]];
   };
-  
-  let features;
-  let points = [];
+  const updateMap = (id, value) => {
+    let m;
+    if (!maps.has(id)) {
+      maps.set(id, {});
+    }
+    m = maps.get(id);
+
+    maps.set(id, { ...m, ...value });
+    return maps.get(id);
+  };
+
   let deltax = 0.7;
   let deltay = 0.3;
   let tileerror = 0;
   let failover = 0;
   let zoom;
-  let center;
-  let extent;
 
   const source = new ol.source.OSM({
     crossOrigin: null,
@@ -88,9 +95,8 @@
       );
     }
   });
-  const initView = () => {
-    
-     const ordered = getOrdered();
+  const initView = (id) => {
+    const ordered = getOrdered(id);
 
     const off_y = ordered[3] - ordered[1];
     if (off_y <= 1) {
@@ -108,7 +114,7 @@
     }
 
     const off = 1;
-    extent = ol.proj.transformExtent(
+    const extent = ol.proj.transformExtent(
       [
         ordered[0] - deltax * off,
         ordered[1] - deltay * off,
@@ -120,13 +126,15 @@
     );
 
     // Centerpoint of all the bounding box positions
-    center = [
+    const center = [
       (extent[2] + deltax * off + (extent[0] - deltax * off)) / 2,
       (extent[3] + deltay * off + (extent[1] - deltay * off)) / 2,
     ];
+    return updateMap(id, { extent, center });
   };
 
-  const addMarker = (map) => {
+  const addMarker = (id) => {
+    const { map, features } = maps.get(id);
     const layer = new ol.layer.Vector({
       source: new ol.source.Vector({
         features,
@@ -164,6 +172,8 @@
       );
       const this_ = this;
       const clickHandler = function (e) {
+        const id = e.target.closest(".ol-map").dataset.id;
+        const center = maps.get(id).center;
         this_.getMap().getView().setCenter(center);
       };
 
@@ -283,13 +293,20 @@
       if ("zoom" in el.dataset) {
         zoom = parseFloat(el.dataset.zoom);
       }
+      let points = [];
       if ("points" in el.dataset) {
         const getPoints = () => {
-          return el.dataset.points.trim().split(",").map((p) => parseInt(p));
+          return el.dataset.points
+            .trim()
+            .split(",")
+            .map((p) => parseInt(p));
         };
         points = getPoints();
       }
-      features = createFeatures();
+
+      updateMap(id, { points });
+      const features = createFeatures(id);
+      updateMap(id, { features });
 
       const view = new ol.View({
         minZoom,
@@ -321,12 +338,12 @@
         target: "ol-map-" + id,
         view,
       });
-      maps.set(id, { map });
+      updateMap(id, { map });
+      addMarker(id);
 
       map.on("moveend", function () {});
 
-      initView();
-      addMarker(map);
+      const { extent, center } = initView(id);
 
       view.setCenter(center);
       view.fit(extent, map.getSize(), { constrainResolution: true });

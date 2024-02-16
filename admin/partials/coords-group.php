@@ -4,11 +4,11 @@
   <input type="<?php echo $args['subtype'][0]; ?>" <?php echo $key != 0 ? 'required' : ''; ?> placeholder="<?php echo $args['placeholder'][0]; ?>" name="<?php echo  $args['name']; ?>[<?php echo $key; ?>][lat]" size="20" value="<?php echo esc_attr($val['lat']); ?>" />
   <input type="<?php echo $args['subtype'][2]; ?>" placeholder="<?php echo $args['placeholder'][2]; ?>" name="<?php echo  $args['name']; ?>[<?php echo $key; ?>][lab]" size="30" value="<?php echo esc_attr($val['lab']); ?>" />
 
-  <a href="." class="button button-primary action-button action-remove">
-    <i class="dashicons dashicons-trash"></i>
-  </a>
   <a class="button button-primary action-button action-duplicate">
     <i class="dashicons dashicons-admin-page"></i>
+  </a>
+  <a href="." class="button button-primary action-button action-remove">
+    <i class="dashicons dashicons-trash"></i>
   </a>
   <a class="button button-primary action-button action-add">
     <i class="dashicons dashicons-plus-alt"></i>
