@@ -25,10 +25,11 @@
     let coords = filterCoords(id);
 
     return coords.map((coord) => {
-      const { lat, lon, lab: name } = coord;
+      const { lat, lon, lab } = coord;
+      const name = lab.split(/\\n/).reduce((a, b) => `${a}\n${b}`);
       return new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.fromLonLat([lon, lat])),
-        name,
+        name
       });
     });
   };
