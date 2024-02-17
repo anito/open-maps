@@ -1,8 +1,6 @@
 ((params) => {
   const { coords, min_zoom, max_zoom, marker, filter } = params;
 
-  console.log(marker)
-  
   const maps = new Map();
   const minZoom = parseInt(min_zoom);
   const maxZoom = parseInt(max_zoom);
@@ -31,7 +29,7 @@
       const name = lab.split(/\\n/).reduce((a, b) => `${a}\n${b}`);
       return new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.fromLonLat([lon, lat])),
-        name
+        name,
       });
     });
   };
@@ -145,7 +143,7 @@
       style: new ol.style.Style({
         image: new ol.style.Icon({
           anchor: [0.5, 1],
-          src: marker || path + "marker.png",
+          src: marker || path + "marker.png",
         }),
       }),
     });
@@ -284,7 +282,7 @@
         anchorXUnits: "fraction",
         anchorYUnits: "pixels",
         src: marker || path + "marker.png",
-        scale: 0.1,
+        scale: 1,
       }),
     });
     const style = [iconStyle, labelStyle];
@@ -342,7 +340,7 @@
         view,
       });
       updateMap(id, { map });
-      addMarker(id);
+      // addMarker(id);
 
       map.on("moveend", function () {});
 
