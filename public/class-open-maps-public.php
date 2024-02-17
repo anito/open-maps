@@ -76,6 +76,7 @@ class Open_Maps_Public extends Open_Maps
 
     $coords            = get_option('open_maps_coords');
     $filter            = get_option('open_maps_grayscale');
+    $marker            = (!empty($image_id = get_option('open_maps_marker'))) ? wp_get_attachment_image_url($image_id, 'full') : false;
     $min_zoom          = DEFAULT_MIN_ZOOM;
     $max_zoom          = DEFAULT_MAX_ZOOM;
 
@@ -85,6 +86,7 @@ class Open_Maps_Public extends Open_Maps
       'coords'    => $coords,
       'min_zoom'  => $min_zoom,
       'max_zoom'  => $max_zoom,
+      'marker'    => $marker,
       'filter'    => $filter,
     ));
     

@@ -1,6 +1,8 @@
 ((params) => {
-  const { coords, min_zoom, max_zoom, filter } = params;
+  const { coords, min_zoom, max_zoom, marker, filter } = params;
 
+  console.log(marker)
+  
   const maps = new Map();
   const minZoom = parseInt(min_zoom);
   const maxZoom = parseInt(max_zoom);
@@ -143,7 +145,7 @@
       style: new ol.style.Style({
         image: new ol.style.Icon({
           anchor: [0.5, 1],
-          src: path + "marker.png",
+          src: marker || path + "marker.png",
         }),
       }),
     });
@@ -281,7 +283,7 @@
         anchor: [0.5, 46],
         anchorXUnits: "fraction",
         anchorYUnits: "pixels",
-        src: path + "marker.png",
+        src: marker || path + "marker.png",
         scale: 0.1,
       }),
     });

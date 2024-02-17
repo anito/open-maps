@@ -149,6 +149,7 @@ class Open_Maps_Admin extends Open_Maps
 
     $coords            = get_option('open_maps_coords');
     $filter            = get_option('open_maps_grayscale');
+    $marker            = (!empty($image_id = get_option('open_maps_marker'))) ? wp_get_attachment_image_url($image_id, 'full') : false;
     $min_zoom          = DEFAULT_MIN_ZOOM;
     $max_zoom          = DEFAULT_MAX_ZOOM;
 
@@ -158,6 +159,7 @@ class Open_Maps_Admin extends Open_Maps
       'coords'    => $coords,
       'min_zoom'  => $min_zoom,
       'max_zoom'  => $max_zoom,
+      'marker'    => $marker,
       'filter'    => $filter,
     ));
     wp_enqueue_script(self::$plugin_name . '-admin', plugin_dir_url(__FILE__) . 'js/open-maps-admin.js', array('jquery'), self::$version, false);
@@ -230,7 +232,7 @@ class Open_Maps_Admin extends Open_Maps
       'open_maps_general_section', // ID used to identify this section and with which to register options
       __('General settings', 'open-maps'), // Title
       array($this, 'open_maps_display_general_account'), // Callback
-      'open_maps_general_settings' // Page on which to add this section of options
+      'open_maps_general_settings', // Page on which to add this section of options
     );
 
     // Coordinates
@@ -249,6 +251,29 @@ class Open_Maps_Admin extends Open_Maps
       $args['id'],
       __('Coordinates and label', 'open-maps'),
       array($this, 'open_maps_render_coords'),
+      'open_maps_general_settings',
+      'open_maps_general_section',
+      $args
+    );
+    $register($args['id']);
+
+    // Marker
+    unset($args);
+    $args = array(
+      'type'              => 'input',
+      'subtype'           => array('text', 'size' => 20),
+      'placeholder'       => '',
+      'id'                => 'open_maps_marker',
+      'name'              => 'open_maps_marker',
+      'get_options_list'  => '',
+      'value_type'        => 'normal',
+      'wp_data'           => 'option',
+      'description'       => __('Image Post ID', 'open-maps'),
+    );
+    add_settings_field(
+      $args['id'],
+      __('Custom marker', 'open-maps'),
+      array($this, 'open_maps_render_settings_field'),
       'open_maps_general_settings',
       'open_maps_general_section',
       $args
@@ -431,7 +456,6 @@ class Open_Maps_Admin extends Open_Maps
         }
         break;
       default:
-        # code...
         break;
     }
 
@@ -439,7 +463,7 @@ class Open_Maps_Admin extends Open_Maps
       echo '<label for="' . $args['id'] . '" class="description">&nbsp;' . $args['label'] . '</label>';
     }
     if (isset($args['description'])) {
-      echo '<p class="description">' . $args['description'] . '</p>';
+      echo '<p class="description"><i><small>' . $args['description'] . '</small></i></p>';
     }
   }
 
