@@ -4,8 +4,6 @@
   const maps = new Map();
   const minZoom = parseInt(min_zoom);
   const maxZoom = parseInt(max_zoom);
-  const lat = parseFloat(coords[0].lat);
-  const lon = parseFloat(coords[0].lon);
   const EPSG = ["EPSG:4326", "EPSG:3857"];
   const path = (() => {
     const url = document.currentScript.src;
@@ -199,8 +197,7 @@
       abutton.setAttribute("style", "color:#fff !important");
       abutton.innerHTML = "Vollbild";
 
-      abutton.setAttribute(
-        "href",
+      const setUrl = (lat, lon) =>
         "https://www.openstreetmap.org/?mlat=" +
           lat +
           "&mlon=" +
@@ -212,9 +209,19 @@
           "/" +
           lon +
           "&layers=N"
-      );
-      abutton.setAttribute("target", "_blank");
+      ;
       button.appendChild(abutton);
+      abutton.addEventListener('click', function(e) {
+        e.preventDefault();
+        const el = e.target;
+        const id = el.closest('.ol-map').dataset.id;
+        const coords = filterCoords(id);
+        if(coords.length) {
+          const {lat, lon} = filterCoords(id)[0];
+          const url = setUrl(lat, lon);
+          window.open(url, '_blank');
+        }
+      })
 
       const element = document.createElement("div");
       element.className = "ol-route-btn ol-unselectable ol-control";
@@ -234,8 +241,7 @@
       abutton.setAttribute("style", "color:#fff !important");
       abutton.innerHTML = "Routenplaner";
 
-      abutton.setAttribute(
-        "href",
+      const setUrl = (lat, lon) =>
         "https://map.project-osrm.org/?z=14&center=" +
           lat +
           "," +
@@ -247,9 +253,21 @@
           "&hl=de" +
           "&alt=0" +
           "&srv=0"
-      );
+      ;
       abutton.setAttribute("target", "_blank");
       button.appendChild(abutton);
+
+      abutton.addEventListener('click', function(e) {
+        e.preventDefault();
+        const el = e.target;
+        const id = el.closest('.ol-map').dataset.id;
+        const coords = filterCoords(id);
+        if(coords.length) {
+          const {lat, lon} = filterCoords(id)[0];
+          const url = setUrl(lat, lon);
+          window.open(url, '_blank');
+        }
+      })
 
       const element = document.createElement("div");
       element.className = "ol-routeplanner-btn ol-unselectable ol-control";
