@@ -20,50 +20,83 @@
  * @subpackage Open_Maps/admin
  * @author     Ben Shadle <benshadle@gmail.com>
  */
-class Open_Maps_Admin
+class Open_Maps_Admin extends Open_Maps
 {
-
-  /**
-   * The ID of this plugin.
-   *
-   * @since    1.0.0
-   * @access   private
-   * @var      string    $plugin_name    The ID of this plugin.
-   */
-  private $plugin_name;
-
-  /**
-   * The version of this plugin.
-   *
-   * @since    1.0.0
-   * @access   private
-   * @var      string    $version    The current version of this plugin.
-   */
-  private $version;
 
   /**
    * Initialize the class and set its properties.
    *
    * @since    1.0.0
-   * @param      string    $plugin_name       The name of this plugin.
-   * @param      string    $version    The version of this plugin.
    */
-  public function __construct($plugin_name, $version)
+  public function __construct()
   {
 
-    $this->plugin_name = $plugin_name;
-    $this->version = $version;
-
     add_action('admin_menu', array($this, 'addPluginAdminMenu'), 9);
+    add_action('admin_init', array($this, 'loadFiles'));
+    add_action('admin_footer', array($this, 'add_admin_footer_template'));
     add_action('admin_init', array($this, 'registerAndBuildFields'));
     add_action('option', array($this, 'registerAndBuildFields'));
-    add_action('update_option_open_maps_grayscale', array($this, 'open_maps_grayscale_callback'), 10, 2);
+    add_filter('pre_update_option_open_maps_ini_zoom', array($this, 'open_maps_ini_zoom_callback'), 10, 2);
+    add_filter('pre_update_option_open_maps_coords', array($this, 'open_maps_pre_update_coords_callback'), 10, 2);
+    add_filter('pre_update_option_open_maps_shortcode', array($this, 'open_maps_pre_update_shortcode_callback'), 10, 2);
+    add_action('update_option_open_maps_grayscale', array($this, 'open_maps_grayscale_callback'), 10, 0);
+    add_filter('option_open_maps_coords', array($this, 'open_maps_coords_callback'));
+    add_filter('open-maps/template-path', array($this, 'template_path'));
+  }
+
+  public function loadFiles()
+  {
+    require_once $this->plugin_path('includes/class-open-maps-templates.php');
+  }
+
+  public function open_maps_pre_update_coords_callback($new, $old)
+  {
+
+    $new = array_values($new);
+    foreach ($new as $key => $val) {
+      $new[$key]['index'] = $key + 1;
+    }
+
+    return $new;
+  }
+
+  public function open_maps_pre_update_shortcode_callback($new, $old)
+  {
+
+    $new = preg_replace('/\s+(?=(?:(?:[^"]*"){2})*[^"]*"[^"]*$)/', '', $new);
+    return $new;
+  }
+
+  public function open_maps_coords_callback($value)
+  {
+
+    foreach ($value as $key => $val) {
+
+      if (empty($val['lat']) || empty($val['lon'])) {
+        unset($value[$key]);
+        continue;
+      }
+      if (is_numeric($val['lat'])) {
+        $value[$key]['lat'] = (float) $val['lat'];
+      }
+      if (is_numeric($val['lon'])) {
+        $value[$key]['lon'] = (float) $val['lon'];
+      }
+    }
+    return array_values((array) $value);
+  }
+
+  public function open_maps_ini_zoom_callback($new, $old)
+  {
+    if ((float) $new > DEFAULT_MAX_ZOOM) return DEFAULT_MAX_ZOOM;
+    if ((float) $new < DEFAULT_MIN_ZOOM) return DEFAULT_MIN_ZOOM;
+    return $new;
   }
 
   /**
    * Remove tiles directory including its content in order to fetch fresh map tiles
    */
-  public function open_maps_grayscale_callback($old, $new)
+  public function open_maps_grayscale_callback()
   {
 
     $dir = plugin_dir_path(__DIR__) . 'tiles';
@@ -90,7 +123,8 @@ class Open_Maps_Admin
      * class.
      */
 
-    wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/open-maps-admin.css', array(), $this->version, 'all');
+    wp_enqueue_style(self::$plugin_name, plugin_dir_url(__FILE__) . 'css/open-maps-admin.css', array(), self::$version, 'all');
+    wp_enqueue_style(self::$plugin_name . '-open-maps', plugin_dir_url(__DIR__) . 'assets/css/map.css', array(), self::$version, 'all');
   }
 
   /**
@@ -113,21 +147,42 @@ class Open_Maps_Admin
      * class.
      */
 
-    wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/open-maps-admin.js', array('jquery'), $this->version, false);
+    $coords            = get_option('open_maps_coords');
+    $filter            = get_option('open_maps_grayscale');
+    $marker            = (!empty($image_id = get_option('open_maps_marker'))) ? wp_get_attachment_image_url($image_id, 'full') : false;
+    $min_zoom          = DEFAULT_MIN_ZOOM;
+    $max_zoom          = DEFAULT_MAX_ZOOM;
+
+    wp_enqueue_script(self::$plugin_name . '-open-maps', plugin_dir_url(__DIR__) . 'assets/js/map.js', array(), self::$version, true);
+    wp_enqueue_script(self::$plugin_name . '-open-maps-main', plugin_dir_url(__DIR__) . 'assets/js/m.js', array(), self::$version, true);
+    wp_localize_script(self::$plugin_name . '-open-maps-main', 'OpenStreetParams', array(
+      'coords'    => $coords,
+      'min_zoom'  => $min_zoom,
+      'max_zoom'  => $max_zoom,
+      'marker'    => $marker,
+      'filter'    => $filter,
+    ));
+    wp_enqueue_script(self::$plugin_name . '-admin', plugin_dir_url(__FILE__) . 'js/open-maps-admin.js', array('jquery'), self::$version, false);
+    wp_localize_script(self::$plugin_name . '-admin', 'OpenStreetAdminParams', array());
   }
 
   public function addPluginAdminMenu()
   {
     //add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position );
-    add_menu_page(__('Open Street Maps', 'open-maps'), __('Open Street Maps', 'open-maps'), 'administrator', $this->plugin_name, array($this, 'displayPluginAdminSettings'), 'dashicons-location-alt', 26);
+    add_menu_page(__('Open Street Maps', 'open-maps'), __('Open Street Maps', 'open-maps'), 'administrator', self::$plugin_name, array($this, 'displayPluginAdminSettings'), 'dashicons-location-alt', 26);
 
     //add_submenu_page( '$parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function );
-    // add_submenu_page($this->plugin_name, 'Open Maps Settings', __('Settings', 'open-maps'), 'administrator', $this->plugin_name . '-settings', array($this, 'displayPluginAdminSettings'));
+    // add_submenu_page(self::$plugin_name, 'Open Maps Settings', __('Settings', 'open-maps'), 'administrator', self::$plugin_name . '-settings', array($this, 'displayPluginAdminSettings'));
+  }
+
+  public function template_path($path = '')
+  {
+    return trailingslashit('admin') . $path;
   }
 
   public function displayPluginAdminDashboard()
   {
-    require_once 'partials/' . $this->plugin_name . '-admin-display.php';
+    require_once 'partials/' . self::$plugin_name . '-admin-display.php';
   }
 
   public function displayPluginAdminSettings()
@@ -138,7 +193,7 @@ class Open_Maps_Admin
       add_action('admin_notices', array($this, 'settingsPageSettingsMessages'));
       do_action('admin_notices', $_GET['error_message']);
     }
-    require_once 'partials/' . $this->plugin_name . '-admin-settings-display.php';
+    require_once 'partials/' . self::$plugin_name . '-admin-settings-display.php';
   }
 
   public function settingsPageSettingsMessages($error_message)
@@ -177,47 +232,47 @@ class Open_Maps_Admin
       'open_maps_general_section', // ID used to identify this section and with which to register options
       __('General settings', 'open-maps'), // Title
       array($this, 'open_maps_display_general_account'), // Callback
-      'open_maps_general_settings' // Page on which to add this section of options
+      'open_maps_general_settings', // Page on which to add this section of options
     );
 
-    // Latitude
+    // Coordinates
+    unset($args);
     $args = array(
       'type'              => 'input',
-      'subtype'           => 'text',
-      'id'                => 'open_maps_latitude',
-      'name'              => 'open_maps_latitude',
-      'required'          => 'required="required"',
+      'subtype'           => array('text', 'text', 'text'),
+      'id'                => 'open_maps_coords',
+      'name'              => 'open_maps_coords',
+      'placeholder'       => array(__('Latitude', 'open-maps'), __('Longitude', 'open-maps'), __('Label', 'open-maps')),
       'get_options_list'  => '',
       'value_type'        => 'normal',
-      'wp_data'           => 'option'
+      'wp_data'           => 'option',
     );
-
     add_settings_field(
       $args['id'],
-      __('Latitude', 'open-maps'),
-      array($this, 'open_maps_render_settings_field'),
+      __('Coordinates and label', 'open-maps'),
+      array($this, 'open_maps_render_coords'),
       'open_maps_general_settings',
       'open_maps_general_section',
       $args
     );
     $register($args['id']);
 
-    // Longitude
+    // Marker
     unset($args);
     $args = array(
       'type'              => 'input',
-      'subtype'           => 'text',
-      'id'                => 'open_maps_longitude',
-      'name'              => 'open_maps_longitude',
-      'required'          => 'required="required"',
+      'subtype'           => array('text', 'size' => 20),
+      'placeholder'       => '',
+      'id'                => 'open_maps_marker',
+      'name'              => 'open_maps_marker',
       'get_options_list'  => '',
       'value_type'        => 'normal',
-      'wp_data'           => 'option'
+      'wp_data'           => 'option',
+      'description'       => __('Image Post ID', 'open-maps'),
     );
-
     add_settings_field(
       $args['id'],
-      __('Longitude', 'open-maps'),
+      __('Custom marker', 'open-maps'),
       array($this, 'open_maps_render_settings_field'),
       'open_maps_general_settings',
       'open_maps_general_section',
@@ -229,74 +284,26 @@ class Open_Maps_Admin
     unset($args);
     $args = array(
       'type'              => 'input',
-      'subtype'           => 'number',
-      'min'               => 1,
-      'max'               => DEFAULT_MAX_ZOOM - DEFAULT_MIN_ZOOM,
+      'subtype'           => array('text', 'size' => 5),
+      'min'               => DEFAULT_MIN_ZOOM,
+      'max'               => DEFAULT_MAX_ZOOM,
       'placeholder'       => DEFAULT_INI_ZOOM,
       'id'                => 'open_maps_ini_zoom',
       'name'              => 'open_maps_ini_zoom',
       'get_options_list'  => '',
       'value_type'        => 'normal',
       'wp_data'           => 'option',
-      'label'             => sprintf(__('[%d - %d]', 'open-maps'), 1, DEFAULT_MAX_ZOOM - DEFAULT_MIN_ZOOM),
+      'label'             => sprintf(__('[%d - %d]', 'open-maps'), DEFAULT_MIN_ZOOM, DEFAULT_MAX_ZOOM),
     );
     add_settings_field(
       $args['id'],
-      __('Zoomlevel', 'open-maps'),
+      __('Default zoomlevel', 'open-maps'),
       array($this, 'open_maps_render_settings_field'),
       'open_maps_general_settings',
       'open_maps_general_section',
       $args
     );
     $register($args['id']);
-
-    // Min Zoom
-    // unset($args);
-    // $args = array(
-    //   'type'              => 'input',
-    //   'subtype'           => 'number',
-    //   'min'               => DEFAULT_MIN_ZOOM,
-    //   'max'               => DEFAULT_MAX_ZOOM,
-    //   'placeholder'       => DEFAULT_MIN_ZOOM,
-    //   'id'                => 'open_maps_min_zoom',
-    //   'name'              => 'open_maps_min_zoom',
-    //   'get_options_list'  => '',
-    //   'value_type'        => 'normal',
-    //   'wp_data'           => 'option'
-    // );
-    // add_settings_field(
-    //   $args['id'],
-    //   __('Min. Zoom', 'open-maps'),
-    //   array($this, 'open_maps_render_settings_field'),
-    //   'open_maps_general_settings',
-    //   'open_maps_general_section',
-    //   $args
-    // );
-    // $register($args['id']);
-
-    // Max Zoom
-    // unset($args);
-    // $args = array(
-    //   'type'              => 'input',
-    //   'subtype'           => 'number',
-    //   'min'               => DEFAULT_MIN_ZOOM,
-    //   'max'               => DEFAULT_MAX_ZOOM,
-    //   'placeholder'       => DEFAULT_MAX_ZOOM,
-    //   'id'                => 'open_maps_max_zoom',
-    //   'name'              => 'open_maps_max_zoom',
-    //   'get_options_list'  => '',
-    //   'value_type'        => 'normal',
-    //   'wp_data'           => 'option'
-    // );
-    // add_settings_field(
-    //   $args['id'],
-    //   __('Max. Zoom', 'open-maps'),
-    //   array($this, 'open_maps_render_settings_field'),
-    //   'open_maps_general_settings',
-    //   'open_maps_general_section',
-    //   $args
-    // );
-    // $register($args['id']);
 
     // Grayscale Filter
     unset($args);
@@ -318,11 +325,87 @@ class Open_Maps_Admin
       $args
     );
     $register($args['id']);
+
+    add_settings_section(
+      'open_maps_preview_section', // ID used to identify this section and with which to register options
+      __('Preview', 'open-maps'), // Title
+      array($this, 'open_maps_display_preview'), // Callback
+      'open_maps_general_settings' // Page on which to add this section of options
+    );
+
+    // Shortcode
+    unset($args);
+    $args = array(
+      'type'              => 'input',
+      'subtype'           => array('text', 'size' => 40),
+      'id'                => 'open_maps_shortcode',
+      'name'              => 'open_maps_shortcode',
+      'placeholder'       => htmlspecialchars(IAK_PLACEHOLDER),
+      'get_options_list'  => '',
+      'value_type'        => 'normal',
+      'wp_data'           => 'option',
+    );
+    add_settings_field(
+      $args['id'],
+      __('Shortcode', 'open-maps'),
+      array($this, 'open_maps_render_preview'),
+      'open_maps_general_settings',
+      'open_maps_preview_section',
+      $args
+    );
+    $register($args['id']);
   }
 
   public function open_maps_display_general_account()
   {
     echo '<p>' . __('Geographical coordinates and view settings', 'open-maps') . '</p>';
+  }
+
+  public function open_maps_display_preview()
+  {
+    echo '<div>';
+    echo '<p>' . __('Use the shortcode field below to generate a preview from your shortcode', 'open-maps') . '</p>';
+    echo '</div>';
+  }
+
+  public function open_maps_render_coords($args)
+  {
+
+    $args['classes'] = array('open-maps-coords-group', 'group');
+    $values = get_option($args['name']);
+    if (!$values) {
+      unset($values);
+      // Upgrade form previous (single coord) installation
+      $values[0]['lat'] = get_option('open_maps_latitude');
+      $values[0]['lon'] = get_option('open_maps_longitude');
+      $values[0]['lab'] = '';
+      add_option($args['name'], $values);
+      // Empty existing tiles
+      $this->open_maps_grayscale_callback();
+      $redirect = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+      wp_redirect($redirect);
+    }
+
+    echo '<ol class="open-maps-coords-groups">';
+    foreach ($values as $key => $val) {
+      $args['id'] = $args['classes'][0] . '-' . ++$key;
+      $this->include_template('coords-group.php', false, compact('args', 'key', 'val'));
+    }
+    echo '</ol>';
+  }
+
+  public function add_admin_footer_template()
+  {
+    $val['lat'] = '';
+    $val['lon'] = '';
+    $val['lab'] = '';
+    $args['name'] = 'open_maps_coords';
+    $args['subtype'] = array('text', 'text', 'text');
+    $args['placeholder'] = array(__('Latitude', 'open-maps'), __('Longitude', 'open-maps'), __('Label', 'open-maps'));
+    $args['classes'] = array('open-maps-coords-group', 'group', 'template');
+    $args['id'] = $args['classes'][0] . '-template';
+    $key = 'template';
+    $template = $this->include_template('coords-group.php', false, compact('args', 'key', 'val'));
   }
 
   public function open_maps_render_settings_field($args)
@@ -331,8 +414,8 @@ class Open_Maps_Admin
      * EXAMPLE INPUT
      * 'type'             => 'input',
      * 'subtype'          => '',
-     * 'id'               => $this->plugin_name.'_example_setting',
-     * 'name'             => $this->plugin_name.'_example_setting',
+     * 'id'               => self::$plugin_name.'_example_setting',
+     * 'name'             => self::$plugin_name.'_example_setting',
      * 'required'         => 'required="required"',
      * 'get_option_list'  => "",
      * 'value_type' = serialized OR normal,
@@ -357,20 +440,22 @@ class Open_Maps_Admin
           $min = (isset($args['min'])) ? 'min="' . $args['min'] . '"' : '';
           $max = (isset($args['max'])) ? 'max="' . $args['max'] . '"' : '';
           $placeholder = (isset($args['placeholder'])) ? 'placeholder="' . $args['placeholder'] . '"' : '';
+          $size = is_array($args['subtype']) && array_key_exists('size', $args['subtype']) ? $args['subtype']['size'] : 40;
+          $subtype = !is_array($args['subtype']) ? $args['subtype'] : (!empty($i = array_intersect($args['subtype'], array('text', 'number'))) ? $i[0] : 'string');
+
           if (isset($args['disabled'])) {
             // hide the actual input bc if it was just a disabled input the info saved in the database would be wrong - bc it would pass empty values and wipe the actual information
-            echo $prependStart . '<input type="' . $args['subtype'] . '" ' . $placeholder . ' id="' . $args['id'] . '_disabled" ' . $step . ' ' . $max . ' ' . $min . ' name="' . $args['name'] . '_disabled" size="40" disabled value="' . esc_attr($value) . '" /><input type="hidden" id="' . $args['id'] . '" ' . $step . ' ' . $max . ' ' . $min . ' name="' . $args['name'] . '" size="40" value="' . esc_attr($value) . '" />' . $prependEnd;
+            echo $prependStart . '<input type="' . $subtype . '" ' . $placeholder . ' id="' . $args['id'] . '_disabled" ' . $step . ' ' . $max . ' ' . $min . ' name="' . $args['name'] . '_disabled" size="' . $size . '" disabled value="' . esc_attr($value) . '" /><input type="hidden" id="' . $args['id'] . '" ' . $step . ' ' . $max . ' ' . $min . ' name="' . $args['name'] . '" size="40" value="' . esc_attr($value) . '" />' . $prependEnd;
           } else {
-            echo $prependStart . '<input type="' . $args['subtype'] . '" ' . $placeholder . ' id="' . $args['id'] . '"' . $required . $step . ' ' . $max . ' ' . $min . ' name="' . $args['name'] . '" size="40" value="' . esc_attr($value) . '" />' . $prependEnd;
+            echo $prependStart . '<input type="' . $subtype . '" ' . $placeholder . ' id="' . $args['id'] . '"' . $required . $step . ' ' . $max . ' ' . $min . ' name="' . $args['name'] . '" size="' . $size . '" value="' . esc_attr($value) . '" />' . $prependEnd;
           }
-          /*<input required="required" '.$disabled.' type="number" step="any" id="'.$this->plugin_name.'_cost2" name="'.$this->plugin_name.'_cost2" value="' . esc_attr( $cost ) . '" size="25" /><input type="hidden" id="'.$this->plugin_name.'_cost" step="any" name="'.$this->plugin_name.'_cost" value="' . esc_attr( $cost ) . '" />*/
+          /*<input required="required" '.$disabled.' type="number" step="any" id="'.self::$plugin_name.'_cost2" name="'.self::$plugin_name.'_cost2" value="' . esc_attr( $cost ) . '" size="25" /><input type="hidden" id="'.self::$plugin_name.'_cost" step="any" name="'.self::$plugin_name.'_cost" value="' . esc_attr( $cost ) . '" />*/
         } else {
           $checked = ($value) ? 'checked' : '';
-          echo '<input type="' . $args['subtype'] . '" id="' . $args['id'] . '"' . $required . ' name="' . $args['name'] . '" size="40" value="1" ' . $checked . ' />';
+          echo '<input type="' . $args['subtype'] . '" id="' . $args['id'] . '"' . $required . ' name="' . $args['name'] . '" value="1" ' . $checked . ' />';
         }
         break;
       default:
-        # code...
         break;
     }
 
@@ -378,7 +463,23 @@ class Open_Maps_Admin
       echo '<label for="' . $args['id'] . '" class="description">&nbsp;' . $args['label'] . '</label>';
     }
     if (isset($args['description'])) {
-      echo '<p class="description">' . $args['description'] . '</p>';
+      echo '<p class="description"><i><small>' . $args['description'] . '</small></i></p>';
     }
+  }
+
+  public function open_maps_render_preview($args)
+  {
+    $this->open_maps_render_settings_field($args);
+    $shortcode = !empty($sc = get_option('open_maps_shortcode')) ? $sc : IAK_PLACEHOLDER;
+    echo do_shortcode($this->include_template('preview.php', true, compact('shortcode')));
+    echo '<div class="open-maps-field-description">';
+    echo '<div>' . __('Usage with parameters:', 'open-maps') . '</div>';
+    echo '<ul>';
+    echo '<li><b>id:  </b>' . __('differentiate multiple maps on the same page', 'open-maps') . '</li>';
+    echo '<li><b>zoom: </b>' . __('overrides default zoom', 'open-maps') . '</li>';
+    echo '<li><b>points:  </b>' . __('only displays points of this ids', 'open-maps') . '</li>';
+    echo '</ul>';
+    echo '</div>';
+    echo '<p style="opacity: .8;"><i><small>' . __('Example:', 'open-maps') . '</i>&nbsp;<span class="code">[iak id="2" zoom="12.3" points="3,4"]</span>' . '</small></i></p>';
   }
 }

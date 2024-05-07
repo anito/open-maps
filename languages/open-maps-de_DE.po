@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Open Street Map\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-05 19:54+0000\n"
-"PO-Revision-Date: 2024-02-07 17:00+0000\n"
+"PO-Revision-Date: 2024-02-17 01:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch\n"
 "Language: de_DE\n"
@@ -15,55 +15,117 @@ msgstr ""
 "X-Loco-Version: 2.6.6; wp-6.4.3\n"
 "X-Domain: open-maps"
 
+#: admin/class-open-maps-admin.php:296
+msgid "[%d - %d]"
+msgstr "[%d - %d]"
+
 #. Author of the plugin
 msgid "Axel Nitzschner"
+msgstr "Axel Nitzschner"
+
+#: admin/class-open-maps-admin.php:252
+msgid "Coordinates and label"
+msgstr "Koordinaten und Label"
+
+#: admin/class-open-maps-admin.php:275
+msgid "Custom marker"
+msgstr "Eigener Marker"
+
+#: admin/class-open-maps-admin.php:300
+msgid "Default zoomlevel"
+msgstr "Standard Zoom-Faktor"
+
+#: admin/class-open-maps-admin.php:478
+msgid "differentiate multiple maps on the same page"
 msgstr ""
+"Ordne bei Verwendung mehrerer Karten auf einer Seite eine eindeutige ID zu"
+
+#: includes/class-open-maps-templates.php:38
+msgid "Error:"
+msgstr "Fehler:"
+
+#: admin/class-open-maps-admin.php:483
+msgid "Example:"
+msgstr "Beispiel:"
 
 #. ID used to identify this section and with which to register options
-#: admin/class-open-maps-admin.php:178
+#: admin/class-open-maps-admin.php:233
 msgid "General settings"
 msgstr "Allgemeine Einstellungen"
 
-#: admin/class-open-maps-admin.php:276
+#: admin/class-open-maps-admin.php:361
 msgid "Geographical coordinates and view settings"
 msgstr "Geografische Koordinaten und Darstellung"
 
-#: admin/class-open-maps-admin.php:265
+#: admin/class-open-maps-admin.php:321
 msgid "Grayscale"
-msgstr "Monochrome Karte"
-
-#. Author URI of the plugin
-msgid "https://www.webpremiere.de"
-msgstr ""
+msgstr "Monochromatische Karte"
 
 #. URI of the plugin
-msgid "https://www.wplauncher.com"
-msgstr ""
+msgid "https://dr-dsgvo.de"
+msgstr "https://dr-dsgvo.de"
+
+#: admin/class-open-maps-admin.php:271
+msgid "Image Post ID"
+msgstr "Image Post ID"
 
 #. Description of the plugin
-msgid "Interactive Map Substitude for Google Maps"
-msgstr "Interaktive Karte als Ersatz für Google Maps"
+msgid "Interactive Map Substitude for Google Maps based on Dr.DSGVOs' solution"
+msgstr ""
+"Interaktive Karte als DSGVO konformer Google Maps Ersatz basierend auf der "
+"Lösung von Dr.DSGVO"
 
-#: admin/class-open-maps-admin.php:222
+#: admin/class-open-maps-admin.php:245 admin/class-open-maps-admin.php:404
+msgid "Label"
+msgstr "Label"
+
+#: admin/class-open-maps-admin.php:245 admin/class-open-maps-admin.php:404
 msgid "Latitude"
 msgstr "Breitengrad"
 
-#: admin/class-open-maps-admin.php:199
+#: admin/class-open-maps-admin.php:245 admin/class-open-maps-admin.php:404
 msgid "Longitude"
 msgstr "Längengrad"
+
+#: admin/class-open-maps-admin.php:480
+msgid "only displays points of this ids"
+msgstr "Stellt nur die Punkte dar, die hier mit ihrem Index angegeben werden"
 
 #. Name of the plugin
 msgid "Open Street Map"
 msgstr "Open Street Map"
 
-#: admin/class-open-maps-admin.php:122
+#: admin/class-open-maps-admin.php:172
 msgid "Open Street Maps"
 msgstr "Open Street Map"
+
+#: admin/class-open-maps-admin.php:479
+msgid "overrides default zoom"
+msgstr "Überschreibt den Standard Zoom"
+
+#. ID used to identify this section and with which to register options
+#: admin/class-open-maps-admin.php:331
+msgid "Preview"
+msgstr "Vorschau"
 
 #: admin/partials/open-maps-admin-settings-display.php:18
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: admin/class-open-maps-admin.php:244
-msgid "Zoomlevel"
-msgstr "Zoom-Faktor"
+#: admin/class-open-maps-admin.php:350
+msgid "Shortcode"
+msgstr "Shortcode"
+
+#: includes/class-open-maps-templates.php:38
+msgid "Template not found"
+msgstr "Vorlage nicht gefunden"
+
+#: admin/class-open-maps-admin.php:476
+msgid "Usage with parameters:"
+msgstr "Verwendung von Parametern:"
+
+#: admin/class-open-maps-admin.php:367
+msgid "Use the shortcode field below to generate a preview from your shortcode"
+msgstr ""
+"Verwende das folgende Eingabefeld um deinen Shortcode mithilfe der Vorschau "
+"zu testen"
