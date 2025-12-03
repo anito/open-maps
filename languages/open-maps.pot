@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Open Street Map\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-07 16:59+0000\n"
+"POT-Creation-Date: 2024-02-17 01:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -16,55 +16,112 @@ msgstr ""
 "X-Loco-Version: 2.6.6; wp-6.4.3\n"
 "X-Domain: open-maps"
 
+#: admin/class-open-maps-admin.php:296
+msgid "[%d - %d]"
+msgstr ""
+
 #. Author of the plugin
 msgid "Axel Nitzschner"
 msgstr ""
 
+#: admin/class-open-maps-admin.php:252
+msgid "Coordinates and label"
+msgstr ""
+
+#: admin/class-open-maps-admin.php:275
+msgid "Custom marker"
+msgstr ""
+
+#: admin/class-open-maps-admin.php:300
+msgid "Default zoomlevel"
+msgstr ""
+
+#: admin/class-open-maps-admin.php:478
+msgid "differentiate multiple maps on the same page"
+msgstr ""
+
+#: includes/class-open-maps-templates.php:38
+msgid "Error:"
+msgstr ""
+
+#: admin/class-open-maps-admin.php:483
+msgid "Example:"
+msgstr ""
+
 #. ID used to identify this section and with which to register options
-#: admin/class-open-maps-admin.php:178
+#: admin/class-open-maps-admin.php:233
 msgid "General settings"
 msgstr ""
 
-#: admin/class-open-maps-admin.php:276
+#: admin/class-open-maps-admin.php:361
 msgid "Geographical coordinates and view settings"
 msgstr ""
 
-#: admin/class-open-maps-admin.php:265
+#: admin/class-open-maps-admin.php:321
 msgid "Grayscale"
 msgstr ""
 
-#. Author URI of the plugin
-msgid "https://www.webpremiere.de"
+#. URI of the plugin
+msgid "https://dr-dsgvo.de"
 msgstr ""
 
-#. URI of the plugin
-msgid "https://www.wplauncher.com"
+#: admin/class-open-maps-admin.php:271
+msgid "Image Post ID"
 msgstr ""
 
 #. Description of the plugin
-msgid "Interactive Map Substitude for Google Maps"
+msgid "Interactive Map Substitude for Google Maps based on Dr.DSGVOs' solution"
 msgstr ""
 
-#: admin/class-open-maps-admin.php:222
+#: admin/class-open-maps-admin.php:245 admin/class-open-maps-admin.php:404
+msgid "Label"
+msgstr ""
+
+#: admin/class-open-maps-admin.php:245 admin/class-open-maps-admin.php:404
 msgid "Latitude"
 msgstr ""
 
-#: admin/class-open-maps-admin.php:199
+#: admin/class-open-maps-admin.php:245 admin/class-open-maps-admin.php:404
 msgid "Longitude"
+msgstr ""
+
+#: admin/class-open-maps-admin.php:480
+msgid "only displays points of this ids"
 msgstr ""
 
 #. Name of the plugin
 msgid "Open Street Map"
 msgstr ""
 
-#: admin/class-open-maps-admin.php:122
+#: admin/class-open-maps-admin.php:172
 msgid "Open Street Maps"
+msgstr ""
+
+#: admin/class-open-maps-admin.php:479
+msgid "overrides default zoom"
+msgstr ""
+
+#. ID used to identify this section and with which to register options
+#: admin/class-open-maps-admin.php:331
+msgid "Preview"
 msgstr ""
 
 #: admin/partials/open-maps-admin-settings-display.php:18
 msgid "Settings"
 msgstr ""
 
-#: admin/class-open-maps-admin.php:244
-msgid "Zoomlevel"
+#: admin/class-open-maps-admin.php:350
+msgid "Shortcode"
+msgstr ""
+
+#: includes/class-open-maps-templates.php:38
+msgid "Template not found"
+msgstr ""
+
+#: admin/class-open-maps-admin.php:476
+msgid "Usage with parameters:"
+msgstr ""
+
+#: admin/class-open-maps-admin.php:367
+msgid "Use the shortcode field below to generate a preview from your shortcode"
 msgstr ""
