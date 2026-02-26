@@ -37,26 +37,24 @@ class Open_Maps_Utils {
 	 * @since     1.0.0
 	 * @return    string    The directory to be removed
 	 */
-	public static function removeDir(string $dir): void
-	{
+	public static function removeDir( string $dir ): void {
 		// Nothing to delete
-		if(!is_dir($dir)) {
+		if ( ! is_dir( $dir ) ) {
 			return;
 		}
 
-		$it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
+		$it    = new RecursiveDirectoryIterator( $dir, RecursiveDirectoryIterator::SKIP_DOTS );
 		$files = new RecursiveIteratorIterator(
 			$it,
 			RecursiveIteratorIterator::CHILD_FIRST
 		);
-		foreach ($files as $file) {
-			if ($file->isDir()) {
-				rmdir($file->getPathname());
+		foreach ( $files as $file ) {
+			if ( $file->isDir() ) {
+				rmdir( $file->getPathname() );
 			} else {
-				unlink($file->getPathname());
+				unlink( $file->getPathname() );
 			}
 		}
-		rmdir($dir);
+		rmdir( $dir );
 	}
-
 }

@@ -1,3 +1,3 @@
 <div class="open-maps-preview">
-  <?php echo $shortcode; ?>
+	<?php echo $shortcode; ?>
 </div>

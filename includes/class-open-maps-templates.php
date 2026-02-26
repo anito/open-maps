@@ -1,81 +1,77 @@
 <?php
 
 // If this file is called directly, abort.
-if (!defined('WPINC')) {
-  die();
+if ( ! defined( 'WPINC' ) ) {
+	die();
 }
 
 // If class `Open_Maps_Templates` doesn't exists yet.
-if (!class_exists('Open_Maps_Templates')) {
+if ( ! class_exists( 'Open_Maps_Templates' ) ) {
 
 
-  class Open_Maps_Templates
-  {
+	class Open_Maps_Templates {
 
-    private static $instance = null;
-    protected $plugin_path;
-    protected $plugin_url;
 
-    public function __construct()
-    {
+		private static $instance = null;
+		protected $plugin_path;
+		protected $plugin_url;
 
-      $this->register();
-    }
+		public function __construct() {
 
-    public function register()
-    {
-      
-    }
+			$this->register();
+		}
 
-    public function include_template($path, $return_instead_of_echo = false, $extract_these = array())
-    {
-      if ($return_instead_of_echo) ob_start();
+		public function register() {
+		}
 
-      $template_file = $this->get_template($path);
+		public function include_template( $path, $return_instead_of_echo = false, $extract_these = array() ) {
+			if ( $return_instead_of_echo ) {
+				ob_start();
+			}
 
-      if (!file_exists($template_file)) {
-        error_log("Template not found: " . $template_file);
-        echo __('Error:', 'open-maps') . ' ' . __('Template not found', 'open-maps') . " (" . $path . ")";
-      } else {
-        extract($extract_these);
-        include $template_file;
-      }
+			$template_file = $this->get_template( $path );
 
-      if ($return_instead_of_echo) return ob_get_clean();
-    }
+			if ( ! file_exists( $template_file ) ) {
+				error_log( 'Template not found: ' . $template_file );
+				echo __( 'Error:', 'open-maps' ) . ' ' . __( 'Template not found', 'open-maps' ) . ' (' . $path . ')';
+			} else {
+				extract( $extract_these );
+				include $template_file;
+			}
 
-    public function plugin_path($path = null)
-    {
+			if ( $return_instead_of_echo ) {
+				return ob_get_clean();
+			}
+		}
 
-      if (!$this->plugin_path) {
-        $this->plugin_path = trailingslashit(dirname(__FILE__, 2));
-      }
+		public function plugin_path( $path = null ) {
 
-      return $this->plugin_path . $path;
-    }
+			if ( ! $this->plugin_path ) {
+				$this->plugin_path = trailingslashit( dirname( __DIR__, 1 ) );
+			}
 
-    private function get_template($name = null)
-    {
+			return $this->plugin_path . $path;
+		}
 
-      $template = $this->template_path() . 'partials/' . $name;
-      return $this->plugin_path($template);
-    }
+		private function get_template( $name = null ) {
 
-    private function template_path()
-    {
+			$template = $this->template_path() . 'partials/' . $name;
+			return $this->plugin_path( $template );
+		}
 
-      return apply_filters('open-maps/template-path', null);
-    }
+		private function template_path() {
 
-    public static function get_instance()
-    {
-      // If the single instance hasn't been set, set it now.
-      if (null == self::$instance) {
-        self::$instance = new self;
-      }
-      return self::$instance;
-    }
-  }
+			return apply_filters( 'open-maps/template-path', null );
+		}
+
+		public static function get_instance() {
+			// If the single instance hasn't been set, set it now.
+			if ( null == self::$instance ) {
+				self::$instance = new self();
+			}
+			return self::$instance;
+		}
+	}
 }
 
 Open_Maps_Templates::get_instance();
